@@ -431,7 +431,7 @@
                 
               
 
-              <time title="创建时间：2019-07-14 01:04:39 / 修改时间：01:14:41" itemprop="dateCreated datePublished" datetime="2019-07-14T01:04:39+08:00">2019-07-14</time>
+              <time title="创建时间：2019-07-14 01:04:39 / 修改时间：01:33:45" itemprop="dateCreated datePublished" datetime="2019-07-14T01:04:39+08:00">2019-07-14</time>
             </span>
           
 
@@ -733,8 +733,8 @@
 <li>B树的高度一般都是在2-4这个高度，树的高度直接影响IO读写的次数，以及查询时间复杂度(log(n))</li>
 <li>如果是三层树结构—支撑的数据可以达到20G，如果是四层树结构—支撑的数据可以达到几十T</li>
 </ul>
-<p><img src="http://hi.csdn.net/attachment/201106/7/8394323_13074405906V6Q.jpg" alt="img"></p>
-<h5 id="B-树示图"><a href="#B-树示图" class="headerlink" title="B+树示图"></a>B+树示图</h5><p><img src="http://hi.csdn.net/attachment/201106/7/8394323_1307440587b6WG.jpg" alt="img"></p>
+<p><img src="b-tree.jpg" alt></p>
+<h5 id="B-树示图"><a href="#B-树示图" class="headerlink" title="B+树示图"></a>B+树示图</h5><p><img src="b+tree.jpg" alt></p>
 <h4 id="B树和B-树的区别"><a href="#B树和B-树的区别" class="headerlink" title="B树和B+树的区别"></a>B树和B+树的区别</h4><p>B树和B+树的最大区别在于非叶子节点是否存储数据的问题。</p>
 <figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">- B树是非叶子节点和叶子节点都会存储数据,存放数据地址</span><br><span class="line">- B+树只有叶子节点才会存储数据，而且存储的数据都是在一行上，而且这些数据都是有指针指向的，也就是有顺序的。</span><br><span class="line">索引列 order by id会使用到主键索引</span><br></pre></td></tr></table></figure>
 
@@ -742,10 +742,10 @@
 <li>B+树叶子节点只会存储数据行（数据文件）的指针，<strong>简单来说数据和索引不在一起，就是非聚集索引</strong>。</li>
 <li>非聚集索引包含主键索引和辅助索引都会存储指针的值</li>
 </ul>
-<h6 id="主键索引"><a href="#主键索引" class="headerlink" title="主键索引"></a>主键索引</h6><p><img src="https://images2015.cnblogs.com/blog/613276/201509/613276-20150903145318028-1558764107.png" alt="img"></p>
+<h6 id="主键索引"><a href="#主键索引" class="headerlink" title="主键索引"></a>主键索引</h6><p><img src="%E9%9D%9E%E8%81%9A%E9%9B%86%E7%B4%A2%E5%BC%95-%E4%B8%BB%E9%94%AE%E7%B4%A2%E5%BC%95.png" alt></p>
 <p>这里设表一共有三列,假设我们以 Col1 为主键,则上图是一个 MyISAM 表的主索引(Primary key)示意。可以看出<br>MyISAM 的索引文件仅仅保存数据记录的地址。</p>
 <h6 id="辅助索引（次要索引）"><a href="#辅助索引（次要索引）" class="headerlink" title="辅助索引（次要索引）"></a>辅助索引（次要索引）</h6><p>在 MyISAM 中,主索引和辅助索引(Secondary key)在结构上没有任何区别,只是主索引要求 key 是唯一的,而辅助索引的 key 可以重复。如果我们在 Col2 上建立一个辅助索引,则此索引的结构如下图所示</p>
-<p><img src="https://images2015.cnblogs.com/blog/613276/201509/613276-20150903145432747-686758579.png" alt="img"></p>
+<p><img src="%E9%9D%9E%E8%81%9A%E9%9B%86%E7%B4%A2%E5%BC%95%E8%BE%85%E5%8A%A9%E7%B4%A2%E5%BC%95.png" alt></p>
 <h5 id="聚集索引（InnoDB）"><a href="#聚集索引（InnoDB）" class="headerlink" title="聚集索引（InnoDB）"></a>聚集索引（InnoDB）</h5><ul>
 <li>主键索引（聚集索引）的叶子节点会存储数据行，<strong>也就是说数据和索引是在一起，这就是聚集索引</strong></li>
 <li>辅助索引只会存储主键值</li>
@@ -754,13 +754,13 @@
 <h6 id="主键索引-1"><a href="#主键索引-1" class="headerlink" title="主键索引"></a>主键索引</h6><ul>
 <li>InnoDB 要求表必须有主键(MyISAM 可以没有),如果没有显式指定,则 MySQL系统会自动选择一个可以唯一标识数据记录的列作为主键,如果不存在这种列,则MySQL 自动为 InnoDB 表生成一个隐含字段作为主键,类型为长整形。</li>
 </ul>
-<p><img src="https://images2015.cnblogs.com/blog/613276/201509/613276-20150903145600560-1749266227.png" alt="img"></p>
+<p><img src="%E8%81%9A%E9%9B%86%E7%B4%A2%E5%BC%95-%E4%B8%BB%E9%94%AE%E7%B4%A2%E5%BC%95.png" alt></p>
 <ul>
 <li>上图是 InnoDB 主索引(同时也是数据文件)的示意图,可以看到叶节点包含了完整的数据记录。这种索引叫做聚集索引。因为 InnoDB 的数据文件本身要按主键聚集,</li>
 </ul>
 <h6 id="辅助索引（次要索引）-1"><a href="#辅助索引（次要索引）-1" class="headerlink" title="辅助索引（次要索引）"></a>辅助索引（次要索引）</h6><ul>
 <li><p>第二个与 MyISAM 索引的不同是 InnoDB 的辅助索引 data 域存储相应记录主键的值而不是地址。换句话<br>说,InnoDB 的所有辅助索引都引用主键作为 data 域。</p>
-<p><img src="https://images2015.cnblogs.com/blog/613276/201509/613276-20150903145711825-1203592107.png" alt="img"></p>
+<p><img src="%E8%81%9A%E9%9B%86%E7%B4%A2%E5%BC%95-%E8%BE%85%E5%8A%A9%E7%B4%A2%E5%BC%95.png" alt></p>
 </li>
 <li><p>聚集索引这种实现方式使得按主键的搜索十分高效,但是辅助索引搜索需要检索两遍索引:首先检索辅助索引获得主键,然后用主键到主索引中检索获得记录。</p>
 </li>
@@ -771,7 +771,7 @@
 <h3 id="查看执行计划"><a href="#查看执行计划" class="headerlink" title="查看执行计划"></a>查看执行计划</h3><hr>
 <h4 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h4><p>MySQL 提供了一个 EXPLAIN 命令, 它可以对 SELECT 语句的执行计划进行分析, 并输出 SELECT 执行的详细信息, 以供开发人员针对性优化.使用explain这个命令来查看一个这些SQL语句的执行计划，查看该SQL语句有没有使用上了索引，有没有做全表扫描，这都可以通过explain命令来查看。可以通过explain命令深入了解MySQL的基于开销的优化器，还可以获得很多可能被优化器考虑到的访问策略的细节，以及当运行SQL语句时哪种策略预计会被优化器采用。</p>
 <p>EXPLAIN 命令用法十分简单, 在 SELECT 语句前加上 explain 就可以了, 例如:</p>
-<p><img src="C:%5CUsers%5Cluohui%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1561993098960.png" alt="1561993098960"></p>
+<p><img src="explain.png" alt></p>
 <h4 id="参数说明"><a href="#参数说明" class="headerlink" title="参数说明"></a>参数说明</h4><p>expain出来的信息有10列，分别是</p>
 <figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">id: SELECT查询的标识符，每个SELECT都会自动分配一个唯一的标识符</span><br><span class="line">select_type: SELECT查询的类型</span><br><span class="line">table: 查询的是哪张表</span><br><span class="line">type: join类型</span><br><span class="line">possible_keys:此次查询中可能选用的索引</span><br><span class="line">key: 此次查询中确切使用到的索引</span><br><span class="line">key_len: 此次查询中使用到索引的长度</span><br><span class="line">ref: 哪个字段或常数与key一起被使用</span><br><span class="line">rows: 显示此次查询一共扫描多少行。这是一个估计值</span><br><span class="line">Extra: 额外信息</span><br></pre></td></tr></table></figure>
 
