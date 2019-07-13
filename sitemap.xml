@@ -1,4 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
+  <url>
+    <loc>https://sccarterrans.github.io/tags/index.html</loc>
+    
+    <lastmod>2019-07-13T10:23:05.623Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://sccarterrans.github.io/categories/index.html</loc>
+    
+    <lastmod>2019-07-13T10:22:49.882Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://sccarterrans.github.io/title/</loc>
+    
+    <lastmod>2019-07-13T03:46:17.714Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://sccarterrans.github.io/title/</loc>
+    
+    <lastmod>2019-07-12T17:42:17.188Z</lastmod>
+    
+  </url>
+  
 </urlset>
