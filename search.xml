@@ -4,19 +4,6 @@
   
     
     <entry>
-      <title>hello java</title>
-      <link href="/hello-java/"/>
-      <url>/hello-java/</url>
-      
-        <content type="html"><![CDATA[]]></content>
-      
-      
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>Hello World</title>
       <link href="/hello-world/"/>
       <url>/hello-world/</url>
