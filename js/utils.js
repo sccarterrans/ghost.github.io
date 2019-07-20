@@ -89,7 +89,6 @@ NexT.utils = {
           selection.removeAllRanges();
           selection.addRange(selected);
         }
-        document.body.removeChild(ta);
       });
       $button.on('mouseleave', function() {
         var $b = $(this).closest('.copy-btn');
@@ -98,7 +97,7 @@ NexT.utils = {
         }, 300);
       });
       initButton($button);
-      $(e).wrap($('<div>').addClass('highlight-wrap')).after($button);
+      $(e).wrap($('<div>').addClass('highlight-wrap')).before($button);
     });
   },
 

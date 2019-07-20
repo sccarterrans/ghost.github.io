@@ -492,6 +492,35 @@ body {
     width: 73%;
   }
 }
+.highlight-wrap {
+  position: relative;
+}
+.highlight-wrap:hover .copy-btn,
+.highlight-wrap .copy-btn:focus {
+  opacity: 1;
+}
+.copy-btn {
+  display: inline-block;
+  position: absolute;
+  padding: 2px 6px;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 20px;
+  color: #333;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  outline: 0;
+  transition: opacity 0.3s ease-in-out;
+  opacity: 0;
+  background-color: #eee;
+  background-image: linear-gradient(#fcfcfc, #eee);
+  border: 1px solid #d5d5d5;
+  border-radius: 3px;
+  right: 4px;
+  top: 8px;
+}
 pre,
 .highlight {
   margin: 20px 0;
@@ -523,8 +552,8 @@ pre code {
   background: none;
   text-shadow: none;
 }
-.highlight *::selection {
-  background: #d6d6d6;
+.highlight {
+  border-radius: 1px;
 }
 .highlight pre {
   border: none;
@@ -592,17 +621,13 @@ pre code {
   border: none;
 }
 pre .deletion {
-  background: #800000;
+  background: #fdd;
 }
 pre .addition {
-  background: #008000;
+  background: #dfd;
 }
 pre .meta {
-  color: #eab700;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+  color: #8959a8;
 }
 pre .comment {
   color: #8e908c;
@@ -1367,7 +1392,7 @@ pre .javascript .function {
   box-sizing: border-box;
   margin: 0 auto 25px;
   padding: 3px;
-  border: 1px solid #ddd;
+  border: none;
 }
 @media (max-width: 767px) {
   .posts-collapse {
@@ -1776,6 +1801,7 @@ pre .javascript .function {
   max-width: 120px;
   height: auto;
   border: 1px solid #eee;
+  opacity: 1;
 }
 .site-author-name {
   margin: 0;
@@ -1810,7 +1836,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #f24a2b;
+  background: #13afa7;
 }
 .feed-link,
 .chat {
