@@ -108,17 +108,22 @@
 
 
 
-  <meta name="description" content="做个靠谱的人">
-<meta name="keywords" content="Java">
-<meta property="og:type" content="website">
-<meta property="og:title" content="辉">
-<meta property="og:url" content="https://sccarterrans.github.io/index.html">
+  <meta name="description" content="数组以下是数组在内存中存储结构和扩容过程。 array数组长度为4，现在需要放入第五个值，需要先扩容，在后边找到能容下新数组长度的连续空间">
+<meta name="keywords" content="Java基础">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ArrayList与LinkedList">
+<meta property="og:url" content="https://sccarterrans.github.io/ArrayList与LinkedList/index.html">
 <meta property="og:site_name" content="辉">
-<meta property="og:description" content="做个靠谱的人">
+<meta property="og:description" content="数组以下是数组在内存中存储结构和扩容过程。 array数组长度为4，现在需要放入第五个值，需要先扩容，在后边找到能容下新数组长度的连续空间">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="d:%5Cwork%5Chexo%5Csccarterrans.github.io%5Csource_posts%5CArrayList%E4%B8%8ELinkedList%5C2.1.png">
+<meta property="og:image" content="d:%5Cwork%5Chexo%5Csccarterrans.github.io%5Csource_posts%5CArrayList%E4%B8%8ELinkedList%5C2.2.png">
+<meta property="og:image" content="d:%5Cwork%5Chexo%5Csccarterrans.github.io%5Csource_posts%5CArrayList%E4%B8%8ELinkedList%5C3.png">
+<meta property="og:updated_time" content="2019-07-29T09:07:24.126Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="辉">
-<meta name="twitter:description" content="做个靠谱的人">
+<meta name="twitter:title" content="ArrayList与LinkedList">
+<meta name="twitter:description" content="数组以下是数组在内存中存储结构和扩容过程。 array数组长度为4，现在需要放入第五个值，需要先扩容，在后边找到能容下新数组长度的连续空间">
+<meta name="twitter:image" content="d:%5Cwork%5Chexo%5Csccarterrans.github.io%5Csource_posts%5CArrayList%E4%B8%8ELinkedList%5C2.1.png">
 
 
 
@@ -128,7 +133,7 @@
 
   
   
-  <link rel="canonical" href="https://sccarterrans.github.io/">
+  <link rel="canonical" href="https://sccarterrans.github.io/ArrayList与LinkedList/">
 
 
 
@@ -138,7 +143,7 @@
   };
 </script>
 
-  <title>辉 - 今天所有的辛酸和努力都会在不经意间闪耀</title>
+  <title>ArrayList与LinkedList | 辉</title>
   
 
 
@@ -186,8 +191,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -229,7 +233,7 @@
         
         
           
-          <li class="menu-item menu-item-home menu-item-active">
+          <li class="menu-item menu-item-home">
 
     
     
@@ -369,9 +373,9 @@
           
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -403,10 +407,8 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/ArrayList与LinkedList/" class="post-title-link" itemprop="url">ArrayList与LinkedList</a>
+          <h2 class="post-title" itemprop="name headline">ArrayList与LinkedList
+
               
             
           </h2>
@@ -475,6 +477,14 @@
           
 
           
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+                 阅读次数： 
+                <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+              </span>
+            </span>
+          
 
           
 
@@ -518,25 +528,52 @@
       
 
       
-        
-          <h3 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h3><p>以下是数组在内存中存储结构和扩容过程。</p>
+        <h3 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h3><p>以下是数组在内存中存储结构和扩容过程。</p>
 <p>array数组长度为4，现在需要放入第五个值，需要先扩容，在后边找到能容下新数组长度的连续空间</p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/ArrayList与LinkedList/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
+<a id="more"></a>
+
+<p><img src="D:%5Cwork%5Chexo%5Csccarterrans.github.io%5Csource_posts%5CArrayList%E4%B8%8ELinkedList%5C2.1.png" alt></p>
+<ul>
+<li><p>新增数据空间判断</p>
+<p>新增数据的时候需要判断当前是否有空闲空间存储数据</p>
+</li>
+<li><p>扩容需要申请新的连续空闲空间</p>
+<p>上图为例，长度4需要扩容到8。必须找到长度为8的连续空间才能新建扩容数组</p>
+</li>
+<li><p>把老的数组复制过去，追加新的内容</p>
+</li>
+<li><p>回收老的数组空间</p>
+</li>
+</ul>
+<h3 id="链表"><a href="#链表" class="headerlink" title="链表"></a>链表</h3><p><img src="D:%5Cwork%5Chexo%5Csccarterrans.github.io%5Csource_posts%5CArrayList%E4%B8%8ELinkedList%5C2.2.png" alt></p>
+<ul>
+<li>寻找一个元素空间插入即可，不需要连续空间</li>
+<li>链表长度大小不定</li>
+<li>需要寻址，节省空间</li>
+</ul>
+<h3 id="时间复杂度对比"><a href="#时间复杂度对比" class="headerlink" title="时间复杂度对比"></a>时间复杂度对比</h3><p><img src="D:%5Cwork%5Chexo%5Csccarterrans.github.io%5Csource_posts%5CArrayList%E4%B8%8ELinkedList%5C3.png" alt></p>
+<ul>
+<li><p>O(1)就是最低的时空复杂度了，耗时/耗空间与输入数据大小无关，无论输入数据增大多少倍，耗时/耗空间都不变。 <strong>哈希算法就是典型的O(1)时间复杂度</strong>，无论数据规模多大，都可以在一次计算后找到目标（不考虑冲突的话）</p>
+</li>
+<li><p>O(N)就代表数据量增大几倍，耗时也增大几倍。比如常见的遍历算法，就是O(n)；</p>
+</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
+<li>ArrayList是由数组组成，大小固定，不适合动态存储，LinkedList由双向列表组成，大小可变，扩展性强；ArrayList扩容大小为1.5倍(newCapacity = oldCapacity + (oldCapacity &gt;&gt; 1))</li>
+<li>ArrayList查询和修改方便，只需要修改和获取指定的数组值，LinkedList新增和删除方便，因为只需要添加和删除节点</li>
+<li>数据结构都是存储在内存中，一般初始化时指定大小都是2的倍数，计算机分配空间都是使用次幂去分配，好处是能减少碎片空间，ArrayList扩容时需要查询连续的空间，而LinkedList只需要查询到下一个空间即可</li>
+<li>同样是O(N)次遍历，ArrayList快于LinkedList，因为CPU缓存一次读取多块，ArrayList获取空间块链是连续的，而Linked获取空间块链可能是跳跃的，获取下一个元素需要利用内存中的下标去查找，CPU缓存读取速度大于内存</li>
+<li>forEach循环时删除元素会爆ConcurrentModificationException异常,要使用迭代器(Iterator),或者线程安全的集合,原因是java.util.ArrayList.Itr#checkForComodification方法中modCount != expectedModCount</li>
+</ul>
+
       
     </div>
 
     
 
     
+      
+    
 
     
     
@@ -548,448 +585,101 @@
       
     
     
+      <div>
+        <div id="reward-container">
+  <div>觉得文章有用的话，欢迎点赞打赏~</div>
+  <button id="reward-button" disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
 
+    
+      
+      
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/wechatpay.jpg" alt="辉 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+      
+      
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/alipay.jpg" alt="辉 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        
+
+
+
+
+  
+
+
+
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>辉</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    
+    <a href="https://sccarterrans.github.io/ArrayList与LinkedList/" title="ArrayList与LinkedList">https://sccarterrans.github.io/ArrayList与LinkedList/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
     
 
     <footer class="post-footer">
       
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://sccarterrans.github.io/微服务注册中心-Eureka-架构深入解读/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="辉">
-      <meta itemprop="description" content="做个靠谱的人">
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="辉">
-    </span>
-
-    
-      <header class="post-header">
-
         
+          
         
-          <h2 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/微服务注册中心-Eureka-架构深入解读/" class="post-title-link" itemprop="url">微服务注册中心 Eureka 架构深入解读（转载）</a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-		
-		
+        <div class="post-tags">
           
+            <a href="/tags/Java基础/" rel="tag"># Java基础</a>
           
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-07-20 17:55:42" itemprop="dateCreated datePublished" datetime="2019-07-20T17:55:42+08:00">2019-07-20</time>
-            </span>
-          
-
-          
-            
-
-            
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-07-29 17:05:50" itemprop="dateModified" datetime="2019-07-29T17:05:50+08:00">2019-07-29</time>
-              </span>
-            
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/微服务/" itemprop="url" rel="index"><span itemprop="name">微服务</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-              
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-            
-                <span class="post-meta-item-text">评论数：</span>
-                <a href="/微服务注册中心-Eureka-架构深入解读/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="微服务注册中心-Eureka-架构深入解读/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-file-word-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">本文字数：</span>
-              
-              <span title="本文字数">5.9k</span>
-            </span>
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-clock-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              
-              <span title="阅读时长">5 分钟</span>
-            </span>
-          
-
-          
-
         </div>
-      </header>
-    
+      
 
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
+      
       
       
 
       
-        
-          <p>微服务架构中最核心的部分是服务治理，服务治理最基础的组件是注册中心。随着微服务架构的发展，出现了很多微服务架构的解决方案，其中包括我们熟知的 Dubbo 和 Spring Cloud。</p>
-<p>关于注册中心的解决方案，dubbo 支持了 Zookeeper、Redis、Multicast 和 Simple，官方推荐 Zookeeper。Spring Cloud 支持了 Zookeeper、Consul 和 Eureka，官方推荐 Eureka。</p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/微服务注册中心-Eureka-架构深入解读/#more" rel="contents">
-                阅读全文 &raquo;
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/微服务注册中心-Eureka-架构深入解读/" rel="next" title="微服务注册中心 Eureka 架构深入解读（转载）">
+                <i class="fa fa-chevron-left"></i> 微服务注册中心 Eureka 架构深入解读（转载）
               </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://sccarterrans.github.io/Linux内核空间和用户空间/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="辉">
-      <meta itemprop="description" content="做个靠谱的人">
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="辉">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/Linux内核空间和用户空间/" class="post-title-link" itemprop="url">Linux内核空间和用户空间</a>
-              
             
-          </h2>
-        
+          </div>
 
-        <div class="post-meta">
-		
-		
-          
-          
-          
+          <span class="post-nav-divider"></span>
 
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-07-17 23:41:59" itemprop="dateCreated datePublished" datetime="2019-07-17T23:41:59+08:00">2019-07-17</time>
-            </span>
-          
-
-          
+          <div class="post-nav-prev post-nav-item">
             
-
-            
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-07-29 17:05:12" itemprop="dateModified" datetime="2019-07-29T17:05:12+08:00">2019-07-29</time>
-              </span>
-            
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-              
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-            
-                <span class="post-meta-item-text">评论数：</span>
-                <a href="/Linux内核空间和用户空间/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Linux内核空间和用户空间/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-file-word-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">本文字数：</span>
-              
-              <span title="本文字数">2k</span>
-            </span>
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-clock-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              
-              <span title="阅读时长">2 分钟</span>
-            </span>
-          
-
-          
-
+          </div>
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          <h3 id="Rings"><a href="#Rings" class="headerlink" title="Rings"></a>Rings</h3><p>在计算机科学中, <strong>分级保护域</strong>（英语：hierarchical protection domains），经常被叫作<strong>保护环</strong>（Protection Rings），又称<strong>环型保护</strong>（Rings Protection）、<strong>CPU环</strong>（CPU Rings），简称Rings。这是一种用来在发生故障时保护数据和功能，提升容错度，避免恶意操作 ，提升计算机安全的设计方式。</p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/Linux内核空间和用户空间/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -999,14 +689,22 @@
   </article>
 
 
-    
-  </section>
-
-  
+  </div>
 
 
           </div>
           
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+      </div>
+    </div>
+
+  
+
+
 
 
         </div>
@@ -1027,8 +725,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -1159,6 +866,23 @@
         </div>
       </div>
 
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#数组"><span class="nav-number">1.</span> <span class="nav-text">数组</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#链表"><span class="nav-number">2.</span> <span class="nav-text">链表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#时间复杂度对比"><span class="nav-number">3.</span> <span class="nav-text">时间复杂度对比</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
       
 
       
@@ -1333,6 +1057,10 @@
 
 
   
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
 
   <script src="/js/next-boot.js?v=7.2.0"></script>
 
@@ -1358,9 +1086,66 @@
 </script>
 
 
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://sccarterrans.github.io/ArrayList与LinkedList/";
+    this.page.identifier = "ArrayList与LinkedList/";
+    this.page.title = 'ArrayList与LinkedList';
+    };
+  function loadComments() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://sccarterrans.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', '' + +new Date());
+    (d.head || d.body).appendChild(s);
+  }
+  
+    window.addEventListener('load', loadComments, false);
+  
+</script>
 
 
 
+
+
+  
+    
+
+
+<!-- 
+<script>
+  window.livereOptions = {
+    refer: 'ArrayList与LinkedList/'
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+</script>
+-->
+
+<!-- 来必力City版安装代码 -->
+<div id="lv-container" data-id="city" data-uid="MTAyMC80NTQ1MS8yMTk2Mw==">
+	<script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+	</script>
+<noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+<!-- City版安装代码已完成 -->
+  
 
 
   
