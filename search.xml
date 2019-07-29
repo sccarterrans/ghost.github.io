@@ -4,25 +4,6 @@
   
     
     <entry>
-      <title>ArrayList与LinkedList</title>
-      <link href="/ArrayList%E4%B8%8ELinkedList/"/>
-      <url>/ArrayList%E4%B8%8ELinkedList/</url>
-      
-        <content type="html"><![CDATA[<h3 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h3><p>以下是数组在内存中存储结构和扩容过程。</p><p>array数组长度为4，现在需要放入第五个值，需要先扩容，在后边找到能容下新数组长度的连续空间</p><a id="more"></a><p><img src="2.1.png" alt></p><ul><li><p>新增数据空间判断</p><p>新增数据的时候需要判断当前是否有空闲空间存储数据</p></li><li><p>扩容需要申请新的连续空闲空间</p><p>上图为例，长度4需要扩容到8。必须找到长度为8的连续空间才能新建扩容数组</p></li><li><p>把老的数组复制过去，追加新的内容</p></li><li><p>回收老的数组空间</p></li></ul><h3 id="链表"><a href="#链表" class="headerlink" title="链表"></a>链表</h3><p><img src="2.2.png" alt></p><ul><li>寻找一个元素空间插入即可，不需要连续空间</li><li>链表长度大小不定</li><li>需要寻址，节省空间</li></ul><h3 id="时间复杂度对比"><a href="#时间复杂度对比" class="headerlink" title="时间复杂度对比"></a>时间复杂度对比</h3><p><img src="3.png" alt></p><ul><li><p>O(1)就是最低的时空复杂度了，耗时/耗空间与输入数据大小无关，无论输入数据增大多少倍，耗时/耗空间都不变。 <strong>哈希算法就是典型的O(1)时间复杂度</strong>，无论数据规模多大，都可以在一次计算后找到目标（不考虑冲突的话）</p></li><li><p>O(N)就代表数据量增大几倍，耗时也增大几倍。比如常见的遍历算法，就是O(n)；</p></li></ul><h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul><li>ArrayList是由数组组成，大小固定，不适合动态存储，LinkedList由双向列表组成，大小可变，扩展性强；ArrayList扩容大小为1.5倍(newCapacity = oldCapacity + (oldCapacity &gt;&gt; 1))</li><li>ArrayList查询和修改方便，只需要修改和获取指定的数组值，LinkedList新增和删除方便，因为只需要添加和删除节点</li><li>数据结构都是存储在内存中，一般初始化时指定大小都是2的倍数，计算机分配空间都是使用次幂去分配，好处是能减少碎片空间，ArrayList扩容时需要查询连续的空间，而LinkedList只需要查询到下一个空间即可</li><li>同样是O(N)次遍历，ArrayList快于LinkedList，因为CPU缓存一次读取多块，ArrayList获取空间块链是连续的，而Linked获取空间块链可能是跳跃的，获取下一个元素需要利用内存中的下标去查找，CPU缓存读取速度大于内存</li><li>forEach循环时删除元素会爆ConcurrentModificationException异常,要使用迭代器(Iterator),或者线程安全的集合,原因是java.util.ArrayList.Itr#checkForComodification方法中modCount != expectedModCount</li></ul>]]></content>
-      
-      
-      
-        <tags>
-            
-            <tag> Java基础 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>微服务注册中心 Eureka 架构深入解读（转载）</title>
       <link href="/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83-Eureka-%E6%9E%B6%E6%9E%84%E6%B7%B1%E5%85%A5%E8%A7%A3%E8%AF%BB/"/>
       <url>/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83-Eureka-%E6%9E%B6%E6%9E%84%E6%B7%B1%E5%85%A5%E8%A7%A3%E8%AF%BB/</url>
@@ -40,6 +21,25 @@
         <tags>
             
             <tag> Spring Cloud </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>ArrayList与LinkedList</title>
+      <link href="/ArrayList%E4%B8%8ELinkedList/"/>
+      <url>/ArrayList%E4%B8%8ELinkedList/</url>
+      
+        <content type="html"><![CDATA[<h3 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h3><p>以下是数组在内存中存储结构和扩容过程。</p><p>array数组长度为4，现在需要放入第五个值，需要先扩容，在后边找到能容下新数组长度的连续空间</p><a id="more"></a><p><img src="2.1.png" alt></p><ul><li><p>新增数据空间判断</p><p>新增数据的时候需要判断当前是否有空闲空间存储数据</p></li><li><p>扩容需要申请新的连续空闲空间</p><p>上图为例，长度4需要扩容到8。必须找到长度为8的连续空间才能新建扩容数组</p></li><li><p>把老的数组复制过去，追加新的内容</p></li><li><p>回收老的数组空间</p></li></ul><h3 id="链表"><a href="#链表" class="headerlink" title="链表"></a>链表</h3><p><img src="2.2.png" alt></p><ul><li>寻找一个元素空间插入即可，不需要连续空间</li><li>链表长度大小不定</li><li>需要寻址，节省空间</li></ul><h3 id="时间复杂度对比"><a href="#时间复杂度对比" class="headerlink" title="时间复杂度对比"></a>时间复杂度对比</h3><p><img src="3.png" alt></p><ul><li><p>O(1)就是最低的时空复杂度了，耗时/耗空间与输入数据大小无关，无论输入数据增大多少倍，耗时/耗空间都不变。 <strong>哈希算法就是典型的O(1)时间复杂度</strong>，无论数据规模多大，都可以在一次计算后找到目标（不考虑冲突的话）</p></li><li><p>O(N)就代表数据量增大几倍，耗时也增大几倍。比如常见的遍历算法，就是O(n)；</p></li></ul><h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul><li>ArrayList是由数组组成，大小固定，不适合动态存储，LinkedList由双向列表组成，大小可变，扩展性强；ArrayList扩容大小为1.5倍(newCapacity = oldCapacity + (oldCapacity &gt;&gt; 1))</li><li>ArrayList查询和修改方便，只需要修改和获取指定的数组值，LinkedList新增和删除方便，因为只需要添加和删除节点</li><li>数据结构都是存储在内存中，一般初始化时指定大小都是2的倍数，计算机分配空间都是使用次幂去分配，好处是能减少碎片空间，ArrayList扩容时需要查询连续的空间，而LinkedList只需要查询到下一个空间即可</li><li>同样是O(N)次遍历，ArrayList快于LinkedList，因为CPU缓存一次读取多块，ArrayList获取空间块链是连续的，而Linked获取空间块链可能是跳跃的，获取下一个元素需要利用内存中的下标去查找，CPU缓存读取速度大于内存</li><li>forEach循环时删除元素会爆ConcurrentModificationException异常,要使用迭代器(Iterator),或者线程安全的集合,原因是java.util.ArrayList.Itr#checkForComodification方法中modCount != expectedModCount</li></ul>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> Java基础 </tag>
             
         </tags>
       
