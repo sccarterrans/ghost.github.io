@@ -108,13 +108,13 @@
 
 
 
-  <meta name="description" content="分享主题MSQL架构、索引介绍及原理 分享目标 理解MySQL架构组件及功能 理解MySQL执行流程 掌握MySQL中的表数据和索引在底层是如何被存储 掌握聚集索引（IOT索引组织表）和非聚集索引（堆组织表）的存储方式 掌握索引覆盖和回表概念 掌握最左前缀原则 掌握explain查询计划显示索引是否被使用到 掌握如何正确使用索引，才不会引起索引失效  MySQL架构篇 Connectors连接器，">
-<meta name="keywords" content="Mysql">
+  <meta name="description" content="分享主题MSQL架构、索引介绍及原理 分享目标 理解MySQL架构组件及功能 理解MySQL执行流程 掌握MySQL中的表数据和索引在底层是如何被存储 掌握聚集索引（IOT索引组织表）和非聚集索引（堆组织表）的存储方式 掌握索引覆盖和回表概念 掌握最左前缀原则 掌握explain查询计划显示索引是否被使用到 掌握如何正确使用索引，才不会引起索引失效">
+<meta name="keywords" content="index">
 <meta property="og:type" content="article">
 <meta property="og:title" content="MySQL索引之谜">
 <meta property="og:url" content="https://sccarterrans.github.io/MySQL索引之谜/index.html">
 <meta property="og:site_name" content="辉">
-<meta property="og:description" content="分享主题MSQL架构、索引介绍及原理 分享目标 理解MySQL架构组件及功能 理解MySQL执行流程 掌握MySQL中的表数据和索引在底层是如何被存储 掌握聚集索引（IOT索引组织表）和非聚集索引（堆组织表）的存储方式 掌握索引覆盖和回表概念 掌握最左前缀原则 掌握explain查询计划显示索引是否被使用到 掌握如何正确使用索引，才不会引起索引失效  MySQL架构篇 Connectors连接器，">
+<meta property="og:description" content="分享主题MSQL架构、索引介绍及原理 分享目标 理解MySQL架构组件及功能 理解MySQL执行流程 掌握MySQL中的表数据和索引在底层是如何被存储 掌握聚集索引（IOT索引组织表）和非聚集索引（堆组织表）的存储方式 掌握索引覆盖和回表概念 掌握最左前缀原则 掌握explain查询计划显示索引是否被使用到 掌握如何正确使用索引，才不会引起索引失效">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://sccarterrans.github.io/MySQL索引之谜/1.jpg">
 <meta property="og:image" content="https://sccarterrans.github.io/MySQL索引之谜/2.jpg">
@@ -126,10 +126,10 @@
 <meta property="og:image" content="https://sccarterrans.github.io/MySQL索引之谜/8.png">
 <meta property="og:image" content="https://sccarterrans.github.io/MySQL索引之谜/9.png">
 <meta property="og:image" content="https://sccarterrans.github.io/MySQL索引之谜/10.jpg">
-<meta property="og:updated_time" content="2019-08-05T14:14:26.566Z">
+<meta property="og:updated_time" content="2019-08-05T15:08:08.125Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MySQL索引之谜">
-<meta name="twitter:description" content="分享主题MSQL架构、索引介绍及原理 分享目标 理解MySQL架构组件及功能 理解MySQL执行流程 掌握MySQL中的表数据和索引在底层是如何被存储 掌握聚集索引（IOT索引组织表）和非聚集索引（堆组织表）的存储方式 掌握索引覆盖和回表概念 掌握最左前缀原则 掌握explain查询计划显示索引是否被使用到 掌握如何正确使用索引，才不会引起索引失效  MySQL架构篇 Connectors连接器，">
+<meta name="twitter:description" content="分享主题MSQL架构、索引介绍及原理 分享目标 理解MySQL架构组件及功能 理解MySQL执行流程 掌握MySQL中的表数据和索引在底层是如何被存储 掌握聚集索引（IOT索引组织表）和非聚集索引（堆组织表）的存储方式 掌握索引覆盖和回表概念 掌握最左前缀原则 掌握explain查询计划显示索引是否被使用到 掌握如何正确使用索引，才不会引起索引失效">
 <meta name="twitter:image" content="https://sccarterrans.github.io/MySQL索引之谜/1.jpg">
 
 
@@ -441,7 +441,7 @@
                 
               
 
-              <time title="创建时间：2019-08-05 21:24:26 / 修改时间：22:14:26" itemprop="dateCreated datePublished" datetime="2019-08-05T21:24:26+08:00">2019-08-05</time>
+              <time title="创建时间：2019-08-05 21:24:26 / 修改时间：23:08:08" itemprop="dateCreated datePublished" datetime="2019-08-05T21:24:26+08:00">2019-08-05</time>
             </span>
           
 
@@ -451,6 +451,21 @@
             
           
 
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Mysql/" itemprop="url" rel="index"><span itemprop="name">Mysql</span></a></span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -536,6 +551,8 @@
 <li>掌握explain查询计划显示索引是否被使用到</li>
 <li>掌握如何正确使用索引，才不会引起索引失效</li>
 </ol>
+<a id="more"></a>
+
 <h1 id="MySQL架构篇"><a href="#MySQL架构篇" class="headerlink" title="MySQL架构篇"></a>MySQL架构篇</h1><p><img src="1.jpg" alt="Mysql架构"></p>
 <h2 id="Connectors"><a href="#Connectors" class="headerlink" title="Connectors"></a>Connectors</h2><p>连接器，指的是不同语言中与SQL的交互</p>
 <h2 id="Management-Serveices-amp-Utilities"><a href="#Management-Serveices-amp-Utilities" class="headerlink" title="Management Serveices &amp; Utilities"></a>Management Serveices &amp; Utilities</h2><p>系统管理和控制工具</p>
@@ -720,7 +737,7 @@
 <h3 id="为什么使用组合索引"><a href="#为什么使用组合索引" class="headerlink" title="为什么使用组合索引"></a>为什么使用组合索引</h3><p>mysql创建组合索引的规则是首先会对组合索引的最左边的，也就是第一个a字段的数据进行排序，在第一个字段的排序基础上，然后再对后面第二个的b字段进行排序。其实就相当于实现了类似 order by a b这样一种排序规则。</p>
 <p><strong>为了节省mysql索引存储空间以及提升搜索性能</strong>，可建立组合索引（能使用组合索引就不使用单列索引）</p>
 <p>例如：<br>创建组合索引（相当于建立了col1,col1 col2,col1 col2 col3三个索引）：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> <span class="string">'table_name'</span> <span class="keyword">ADD</span> <span class="keyword">INDEX</span> index_name(<span class="string">'col1'</span>,<span class="string">'col2'</span>,<span class="string">'col3'</span>）</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> <span class="string">'table_name'</span> <span class="keyword">ADD</span> <span class="keyword">INDEX</span> index_name(<span class="string">'col1'</span>,<span class="string">'col2'</span>,<span class="string">'col3'</span>)</span><br></pre></td></tr></table></figure>
 
 <h2 id="常用索引分类"><a href="#常用索引分类" class="headerlink" title="常用索引分类"></a>常用索引分类</h2><h3 id="单列索引"><a href="#单列索引" class="headerlink" title="单列索引"></a>单列索引</h3><h4 id="普通索引"><a href="#普通索引" class="headerlink" title="普通索引"></a>普通索引</h4><ul>
 <li>这是最基本的索引，它没有任何限制</li>
@@ -784,6 +801,9 @@
 <li>索引覆盖是指返回的列在针对辅助索引树上都存在，name,age形成组合索引，查询返回的列id,name,age都在索引树上，不需要再次回表查询主键索引树就能返回查询数据</li>
 <li>回表是指查询条件非主键索引，通过辅助索引去查询数据，无法在辅助索引列上一次获取到所有需要的列字段，通过辅助索引查询获取到值（主键索引ID）再去查询主键索引树来获取返回列数据</li>
 </ul>
+<fron>
+
+<p><br><br></p></fron><p></p>
 <p>【参考链接】</p>
 <p><a href="https://blog.csdn.net/zwjyyy1203/article/details/80664545" target="_blank" rel="noopener">https://blog.csdn.net/zwjyyy1203/article/details/80664545</a></p>
 
@@ -873,7 +893,7 @@
         
         <div class="post-tags">
           
-            <a href="/tags/Mysql/" rel="tag"># Mysql</a>
+            <a href="/tags/index/" rel="tag"># index</a>
           
         </div>
       
@@ -998,7 +1018,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">2</span>
+                      
+                    
+                    <span class="site-state-item-count">3</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -1023,7 +1045,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">4</span>
+                      
+                    
+                    <span class="site-state-item-count">5</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

@@ -109,7 +109,7 @@
 
 
   <meta name="description" content="分享主题mysql explain查询计划 分享目标 掌握最左前缀原则 掌握explain查询计划显示索引是否被使用到 掌握如何正确使用索引，才不会引起索引失效  查看执行计划介绍MySQL 提供了一个 EXPLAIN 命令, 它可以对 SELECT 语句的执行计划进行分析, 并输出 SELECT 执行的详细信息, 以供开发人员针对性优化.使用explain这个命令来查看一个这些SQL语句的执行计">
-<meta name="keywords" content="Mysql">
+<meta name="keywords" content="explain">
 <meta property="og:type" content="article">
 <meta property="og:title" content="MySQL之explain">
 <meta property="og:url" content="https://sccarterrans.github.io/MySQL之explain/index.html">
@@ -117,7 +117,7 @@
 <meta property="og:description" content="分享主题mysql explain查询计划 分享目标 掌握最左前缀原则 掌握explain查询计划显示索引是否被使用到 掌握如何正确使用索引，才不会引起索引失效  查看执行计划介绍MySQL 提供了一个 EXPLAIN 命令, 它可以对 SELECT 语句的执行计划进行分析, 并输出 SELECT 执行的详细信息, 以供开发人员针对性优化.使用explain这个命令来查看一个这些SQL语句的执行计">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://sccarterrans.github.io/MySQL之explain/1.png">
-<meta property="og:updated_time" content="2019-08-05T14:53:53.477Z">
+<meta property="og:updated_time" content="2019-08-05T15:07:38.688Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MySQL之explain">
 <meta name="twitter:description" content="分享主题mysql explain查询计划 分享目标 掌握最左前缀原则 掌握explain查询计划显示索引是否被使用到 掌握如何正确使用索引，才不会引起索引失效  查看执行计划介绍MySQL 提供了一个 EXPLAIN 命令, 它可以对 SELECT 语句的执行计划进行分析, 并输出 SELECT 执行的详细信息, 以供开发人员针对性优化.使用explain这个命令来查看一个这些SQL语句的执行计">
@@ -432,7 +432,7 @@
                 
               
 
-              <time title="创建时间：2019-08-05 22:19:00 / 修改时间：22:53:53" itemprop="dateCreated datePublished" datetime="2019-08-05T22:19:00+08:00">2019-08-05</time>
+              <time title="创建时间：2019-08-05 22:19:00 / 修改时间：23:07:38" itemprop="dateCreated datePublished" datetime="2019-08-05T22:19:00+08:00">2019-08-05</time>
             </span>
           
 
@@ -442,6 +442,21 @@
             
           
 
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Mysql/" itemprop="url" rel="index"><span itemprop="name">Mysql</span></a></span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -523,6 +538,8 @@
 <li>掌握如何正确使用索引，才不会引起索引失效</li>
 </ol>
 <h2 id="查看执行计划"><a href="#查看执行计划" class="headerlink" title="查看执行计划"></a>查看执行计划</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>MySQL 提供了一个 EXPLAIN 命令, 它可以对 SELECT 语句的执行计划进行分析, 并输出 SELECT 执行的详细信息, 以供开发人员针对性优化.使用explain这个命令来查看一个这些SQL语句的执行计划，查看该SQL语句有没有使用上了索引，有没有做全表扫描，这都可以通过explain命令来查看。可以通过explain命令深入了解MySQL的基于开销的优化器，还可以获得很多可能被优化器考虑到的访问策略的细节，以及当运行SQL语句时哪种策略预计会被优化器采用。</p>
+<a id="more"></a>
+
 <p>EXPLAIN 命令用法十分简单, 在 SELECT 语句前加上 explain 就可以了, 例如:</p>
 <p><img src="1.png" alt></p>
 <h3 id="参数说明"><a href="#参数说明" class="headerlink" title="参数说明"></a>参数说明</h3><p>expain出来的信息有10列，分别是</p>
@@ -581,8 +598,6 @@
 
 <h2 id="索引失效分析"><a href="#索引失效分析" class="headerlink" title="索引失效分析"></a>索引失效分析</h2><figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">1.全值匹配我最爱</span><br><span class="line">2.最佳左前缀法则</span><br><span class="line">3.不要在索引上做计算</span><br><span class="line">4.范围条件右边的列失效</span><br><span class="line">5.尽量使用覆盖索引</span><br><span class="line">6.索引字段上不要使用不等</span><br><span class="line">7.主键索引字段上不可以判断null</span><br><span class="line">8.索引字段使用like不以通配符开头</span><br><span class="line">9.索引字段字符串要加单引号</span><br><span class="line">10.索引字段不要使用or</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">name,age是组合索引</span><br></pre></td></tr></table></figure>
-
 <h3 id="全值匹配我最爱"><a href="#全值匹配我最爱" class="headerlink" title="全值匹配我最爱"></a>全值匹配我最爱</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; explain select * from user where name='zhangsan' and age=20;</span><br><span class="line">+<span class="comment">----+-------------+-------+------+---------------+--------------+---------+-------------+------+-----------------------+</span></span><br><span class="line">| id | select_type | table | type | possible_keys | key          | key_len | ref         | rows | Extra                 |</span><br><span class="line">+<span class="comment">----+-------------+-------+------+---------------+--------------+---------+-------------+------+-----------------------+</span></span><br><span class="line">|  1 | SIMPLE      | user  | ref  | idx_name_age  | idx_name_age | 308     | const,const |    1 | Using index condition |</span><br><span class="line">+<span class="comment">----+-------------+-------+------+---------------+--------------+---------+-------------+------+-----------------------+</span></span><br><span class="line">1 row in <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
 
 <h3 id="最佳左前缀法则"><a href="#最佳左前缀法则" class="headerlink" title="最佳左前缀法则"></a>最佳左前缀法则</h3><figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">组合索引，带头索引不能死，中间索引不能断</span><br></pre></td></tr></table></figure>
@@ -623,8 +638,14 @@
 
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">全值匹配我最爱，最左前缀要遵守 </span><br><span class="line">带头大哥不能死，中间兄弟不能断 </span><br><span class="line">索引列上少计算，范围之后全失效 </span><br><span class="line">LIKE符号写最右，覆盖索引不写星 </span><br><span class="line">不等空值还有or，索引失效要少用</span><br></pre></td></tr></table></figure>
 
+<fron>
+
+<p><br><br></p></fron><p></p>
 <p>[参考链接]</p>
-<p><a href="https://segmentfault.com/a/1190000008131735" target="_blank" rel="noopener">https://segmentfault.com/a/1190000008131735</a><br><a href="https://blog.csdn.net/rewiner120/article/details/70598797" target="_blank" rel="noopener">https://blog.csdn.net/rewiner120/article/details/70598797</a></p>
+<ul>
+<li><a href="https://segmentfault.com/a/1190000008131735" target="_blank" rel="noopener">https://segmentfault.com/a/1190000008131735</a></li>
+<li><a href="https://blog.csdn.net/rewiner120/article/details/70598797" target="_blank" rel="noopener">https://blog.csdn.net/rewiner120/article/details/70598797</a></li>
+</ul>
 
       
     </div>
@@ -712,7 +733,7 @@
         
         <div class="post-tags">
           
-            <a href="/tags/Mysql/" rel="tag"># Mysql</a>
+            <a href="/tags/explain/" rel="tag"># explain</a>
           
         </div>
       
@@ -833,7 +854,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">2</span>
+                      
+                    
+                    <span class="site-state-item-count">3</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -858,7 +881,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">4</span>
+                      
+                    
+                    <span class="site-state-item-count">5</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
