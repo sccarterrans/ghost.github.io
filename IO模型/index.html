@@ -108,21 +108,18 @@
 
 
 
-  <meta name="description" content="PIO与DMA在介绍 I/O 模型之前，有必要简单地说说慢速 I/O 设备和内存之间的数据传输方式。  PIO的英文拼写是“Programming Input/Output Model”，PIO模式是一种通过CPU执行I/O端口指令来进行数据的读写的数据交换模式。是最早先的硬盘数据传输模式，数据传输速率低下，CPU占有率也很高，大量传输数据时会因为占用过多的CPU资源而导致系统停顿，无法进行其它的">
+  <meta name="description" content="PIO 我们拿磁盘来说，很早以前，磁盘和内存之间的数据传输是需要CPU控制的，也就是说如果我们读取磁盘文件到内存中，数据要经过CPU存储转发，这种方式称为PIO。显然这种方式非常不合理，需要占用大量的CPU时间来读取文件，造成文件访问时系统几乎停止响应。 DMA 后来，DMA（直接内存访问，Direct Memory Access）取代了PIO，它可以不经过CPU而直接进行磁盘和内存（内核空间）的">
 <meta name="keywords" content="Linux">
 <meta property="og:type" content="article">
 <meta property="og:title" content="IO模型">
 <meta property="og:url" content="https://sccarterrans.github.io/IO模型/index.html">
 <meta property="og:site_name" content="辉">
-<meta property="og:description" content="PIO与DMA在介绍 I/O 模型之前，有必要简单地说说慢速 I/O 设备和内存之间的数据传输方式。  PIO的英文拼写是“Programming Input/Output Model”，PIO模式是一种通过CPU执行I/O端口指令来进行数据的读写的数据交换模式。是最早先的硬盘数据传输模式，数据传输速率低下，CPU占有率也很高，大量传输数据时会因为占用过多的CPU资源而导致系统停顿，无法进行其它的">
+<meta property="og:description" content="PIO 我们拿磁盘来说，很早以前，磁盘和内存之间的数据传输是需要CPU控制的，也就是说如果我们读取磁盘文件到内存中，数据要经过CPU存储转发，这种方式称为PIO。显然这种方式非常不合理，需要占用大量的CPU时间来读取文件，造成文件访问时系统几乎停止响应。 DMA 后来，DMA（直接内存访问，Direct Memory Access）取代了PIO，它可以不经过CPU而直接进行磁盘和内存（内核空间）的">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://sccarterrans.github.io/IO模型/1.png">
-<meta property="og:image" content="https://sccarterrans.github.io/IO模型/2.png">
-<meta property="og:updated_time" content="2019-08-12T16:26:24.344Z">
+<meta property="og:updated_time" content="2019-08-12T16:31:26.603Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="IO模型">
-<meta name="twitter:description" content="PIO与DMA在介绍 I/O 模型之前，有必要简单地说说慢速 I/O 设备和内存之间的数据传输方式。  PIO的英文拼写是“Programming Input/Output Model”，PIO模式是一种通过CPU执行I/O端口指令来进行数据的读写的数据交换模式。是最早先的硬盘数据传输模式，数据传输速率低下，CPU占有率也很高，大量传输数据时会因为占用过多的CPU资源而导致系统停顿，无法进行其它的">
-<meta name="twitter:image" content="https://sccarterrans.github.io/IO模型/1.png">
+<meta name="twitter:description" content="PIO 我们拿磁盘来说，很早以前，磁盘和内存之间的数据传输是需要CPU控制的，也就是说如果我们读取磁盘文件到内存中，数据要经过CPU存储转发，这种方式称为PIO。显然这种方式非常不合理，需要占用大量的CPU时间来读取文件，造成文件访问时系统几乎停止响应。 DMA 后来，DMA（直接内存访问，Direct Memory Access）取代了PIO，它可以不经过CPU而直接进行磁盘和内存（内核空间）的">
 
 
 
@@ -448,7 +445,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-08-13 00:26:24" itemprop="dateModified" datetime="2019-08-13T00:26:24+08:00">2019-08-13</time>
+                <time title="修改时间：2019-08-13 00:31:26" itemprop="dateModified" datetime="2019-08-13T00:31:26+08:00">2019-08-13</time>
               </span>
             
           
@@ -511,7 +508,7 @@
               
                 <span class="post-meta-item-text">本文字数：</span>
               
-              <span title="本文字数">2k</span>
+              <span title="本文字数">376</span>
             </span>
           
 
@@ -523,7 +520,7 @@
               
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
               
-              <span title="阅读时长">2 分钟</span>
+              <span title="阅读时长">1 分钟</span>
             </span>
           
 
@@ -542,52 +539,7 @@
       
 
       
-        <h1 id="PIO与DMA"><a href="#PIO与DMA" class="headerlink" title="PIO与DMA"></a>PIO与DMA</h1><p>在介绍 I/O 模型之前，有必要简单地说说慢速 I/O 设备和内存之间的数据传输方式。</p>
-<ul>
-<li>PIO的英文拼写是“Programming Input/Output Model”，PIO模式是一种通过CPU执行I/O端口指令来进行数据的读写的数据交换模式。是最早先的硬盘数据传输模式，数据传输速率低下，CPU占有率也很高，大量传输数据时会因为占用过多的CPU资源而导致系统停顿，无法进行其它的操作。</li>
-<li>DMA的英文拼写是“Direct Memory Access”，汉语的意思就是直接内存访问，是一种不经过CPU而直接从内存了存取数据的数据交换模式。PIO模式下硬盘和内存之间的数据传输是由CPU来控制的；而在DMA模式下，CPU只须向DMA控制器下达指令，让DMA控制器来处理数的传送，数据传送完毕再把信息反馈给CPU，这样就很大程度上减轻了CPU资源占有率。</li>
-</ul>
-<a id="more"></a>
-
-<h1 id="缓存IO和直接IO"><a href="#缓存IO和直接IO" class="headerlink" title="缓存IO和直接IO"></a>缓存IO和直接IO</h1><figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">缓存IO：数据从磁盘先通过DMA模式拷贝到内核空间高速缓存页,再从高速缓存页通过cpu拷贝到用户空间应用缓存</span><br><span class="line">直接IO：数据从磁盘通过DMA模式拷贝到用户空间应用缓存</span><br></pre></td></tr></table></figure>
-
-<h2 id="缓存I-O"><a href="#缓存I-O" class="headerlink" title="缓存I/O"></a>缓存I/O</h2><p><img src="1.png" alt="缓存I/O"></p>
-<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">缓存I/O被称作为标准I/O，大多数文件系统的默认I/O操作都是缓存I/O</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>读操作：</li>
-</ul>
-<p>操作系统检查内核空间的高速缓存页是否命中，如果命中直接返回；否则从物理磁盘中读取，然后load到内核缓存中。</p>
-<ul>
-<li>写操作：</li>
-</ul>
-<p>​        进程调用SystemCall函数将用户空间应用缓存数据通过DMA的方式拷贝到内核空间高速页缓存；</p>
-<ol>
-<li>update系统守护进程会周期性地（一般每隔30秒）调用sync函数，定期冲洗内核块缓冲区数据写入磁盘。</li>
-<li>同时调用系统提供<strong>write</strong>函数立刻返回，等待flusher内核线程空闲时将数据写入磁盘。</li>
-<li>进程调用systemCall函数将用户空间应用缓存数据通过dma的方式拷贝到内核空间高速页缓存,同时掉用系统提供<strong>fsync</strong>函数将用户空间缓存的数据写入磁盘。</li>
-</ol>
-<ul>
-<li>缓存I/O的优点：</li>
-</ul>
-<ol>
-<li>分离了内核空间和用户空间，保护系统本身的运行安全，避免应用程序异常导致系统崩溃&lt;<a href="https://sccarterrans.github.io/Linux%E5%86%85%E6%A0%B8%E7%A9%BA%E9%97%B4%E5%92%8C%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4/">Linux内核空间和用户空间</a>&gt;</li>
-<li>减少缓存与磁盘的I/O磁盘,提升数据读取和写入的性能</li>
-</ol>
-<ul>
-<li>缓存I/O的缺点：</li>
-</ul>
-<ol>
-<li>数据传输过程中需要在应用程序地址空间（用户空间）和缓存（内核空间）之间进行多次数据拷贝操作，这些拷贝操作会给CPU以及内存带来一定的开销。</li>
-</ol>
-<h2 id="直接I-O"><a href="#直接I-O" class="headerlink" title="直接I/O"></a>直接I/O</h2><figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">直接IO就是应用程序直接访问磁盘数据，而不经过内核缓冲区，也就是绕过内核缓冲区,自己管理I/O缓存区，这样做的目</span><br><span class="line">的是减少一次从内核缓冲区到用户程序缓存的数据复制,Linux系统提供open()函数在调用时增加O_DIRECT参数选项，用它打开的文件便可以绕过内核缓冲区完成直接访问，这样便有效避免了CPU和内存的多余时间开销</span><br></pre></td></tr></table></figure>
-
-<p><img src="2.png" alt="直接I/O"></p>
-<ul>
-<li>引入内核缓冲区的目的在于提高磁盘文件的访问性能，因为当进程需要读取磁盘文件时，如果文件内容已经在内核缓冲区中，那么就不需要再次访问磁盘；而当进程需要向文件中写入数据时，实际上只是写到了内核缓冲区便告诉进程已经写成功，而真正写入磁盘是通过一定的策略进行延迟的。然而，对于一些较复杂的应用，比如数据库服务器，它们为了充分提高性能，希望绕过内核缓冲区，由自己在用户态空间实现并管理I/O缓冲区，包括缓存机制和写延迟机制等，以支持独特的查询机制，比如数据库可以根据更加合理的策略来提高查询缓存命中率。另一方面，绕过内核缓冲区也可以减少系统内存的开销，因为内核缓冲区本身就在使用系统内存。</li>
-<li>应用程序直接访问磁盘数据，不经过操作系统内核数据缓冲区，这样做的目的是减少一次从内核缓冲区到用户程序缓存的数据复制。这种方式通常是在对数据的缓存管理由应用程序实现的数据库管理系统中。<br>直接I/O的缺点就是如果访问的数据不在应用程序缓存中，那么每次数据都会直接从磁盘进行加载，这种直接加载会非常缓慢。通常直接I/O跟异步I/O结合使用会得到较好的性能。</li>
-</ul>
-<p>PIO 我们拿磁盘来说，很早以前，磁盘和内存之间的数据传输是需要CPU控制的，也就是说如果我们读取磁盘<br>文件到内存中，数据要经过CPU存储转发，这种方式称为PIO。显然这种方式非常不合理，需要占用大量的CPU时间来读取文件，造成文件访问时系统几乎停止响应。</p>
+        <p>PIO 我们拿磁盘来说，很早以前，磁盘和内存之间的数据传输是需要CPU控制的，也就是说如果我们读取磁盘<br>文件到内存中，数据要经过CPU存储转发，这种方式称为PIO。显然这种方式非常不合理，需要占用大量的CPU时间来读取文件，造成文件访问时系统几乎停止响应。</p>
 <p>DMA 后来，DMA（直接内存访问，Direct Memory Access）取代了PIO，它可以不经过CPU而直接进行磁盘<br>和内存（内核空间）的数据交换。在DMA模式下，CPU只需要向DMA控制器下达指令，让DMA控制器来处理数据的传送即可，DMA控制器通过系统总线来传输数据，传送完毕再通知CPU，这样就在很大程度上降低了CPU占有率，大大节省了系统资源，而它的传输速度与PIO的差异其实并不十分明显，因为这主要取决于慢速设备的速度。</p>
 <p>可以肯定的是，PIO模式的计算机我们现在已经很少见到了。</p>
 
@@ -750,17 +702,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <div class="site-overview-wrap sidebar-panel">
+      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -898,23 +841,6 @@
       </div>
 
       
-      <!--noindex-->
-        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-            
-            
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#PIO与DMA"><span class="nav-number">1.</span> <span class="nav-text">PIO与DMA</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#缓存IO和直接IO"><span class="nav-number">2.</span> <span class="nav-text">缓存IO和直接IO</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#缓存I-O"><span class="nav-number">2.1.</span> <span class="nav-text">缓存I/O</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#直接I-O"><span class="nav-number">2.2.</span> <span class="nav-text">直接I/O</span></a></li></ol></li></ol></div>
-            
-
-          </div>
-        </div>
-      <!--/noindex-->
-      
 
       
         <div class="back-to-top motion-element">
@@ -948,7 +874,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">46k</span>
+    <span title="站点总字数">44k</span>
   
 
   
@@ -957,7 +883,7 @@
       <i class="fa fa-coffee"></i>
     </span>
     
-    <span title="站点阅读时长">41 分钟</span>
+    <span title="站点阅读时长">40 分钟</span>
   
 </div>
 
