@@ -386,7 +386,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://sccarterrans.github.io/IO模型/">
+    <link itemprop="mainEntityOfPage" href="https://sccarterrans.github.io/IO模型-缓存IO与直接IO/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="辉">
@@ -406,7 +406,7 @@
           <h2 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/IO模型/" class="post-title-link" itemprop="url">IO模型</a>
+                <a href="/IO模型-缓存IO与直接IO/" class="post-title-link" itemprop="url">IO模型-缓存IO与直接IO</a>
               
             
           </h2>
@@ -432,23 +432,13 @@
                 
               
 
-              <time title="创建时间：2019-08-12 22:36:34" itemprop="dateCreated datePublished" datetime="2019-08-12T22:36:34+08:00">2019-08-12</time>
+              <time title="创建时间：2019-08-13 00:34:04 / 修改时间：00:35:42" itemprop="dateCreated datePublished" datetime="2019-08-13T00:34:04+08:00">2019-08-13</time>
             </span>
           
 
           
             
 
-            
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-08-13 00:31:26" itemprop="dateModified" datetime="2019-08-13T00:31:26+08:00">2019-08-13</time>
-              </span>
             
           
 
@@ -479,8 +469,8 @@
                 </span>
             
                 <span class="post-meta-item-text">评论数：</span>
-                <a href="/IO模型/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="IO模型/" itemprop="commentCount"></span>
+                <a href="/IO模型-缓存IO与直接IO/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="IO模型-缓存IO与直接IO/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -502,7 +492,7 @@
               
                 <span class="post-meta-item-text">本文字数：</span>
               
-              <span title="本文字数">376</span>
+              <span title="本文字数">1.7k</span>
             </span>
           
 
@@ -514,7 +504,7 @@
               
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
               
-              <span title="阅读时长">1 分钟</span>
+              <span title="阅读时长">2 分钟</span>
             </span>
           
 
@@ -534,12 +524,20 @@
 
       
         
+          <h1 id="PIO与DMA"><a href="#PIO与DMA" class="headerlink" title="PIO与DMA"></a>PIO与DMA</h1><p>在介绍 I/O 模型之前，有必要简单地说说慢速 I/O 设备和内存之间的数据传输方式。</p>
+<ul>
+<li>PIO的英文拼写是“Programming Input/Output Model”，PIO模式是一种通过CPU执行I/O端口指令来进行数据的读写的数据交换模式。是最早先的硬盘数据传输模式，数据传输速率低下，CPU占有率也很高，大量传输数据时会因为占用过多的CPU资源而导致系统停顿，无法进行其它的操作。</li>
+<li>DMA的英文拼写是“Direct Memory Access”，汉语的意思就是直接内存访问，是一种不经过CPU而直接从内存了存取数据的数据交换模式。PIO模式下硬盘和内存之间的数据传输是由CPU来控制的；而在DMA模式下，CPU只须向DMA控制器下达指令，让DMA控制器来处理数的传送，数据传送完毕再把信息反馈给CPU，这样就很大程度上减轻了CPU资源占有率。</li>
+</ul>
+          <!--noindex-->
           
-            <p>PIO 我们拿磁盘来说，很早以前，磁盘和内存之间的数据传输是需要CPU控制的，也就是说如果我们读取磁盘<br>文件到内存中，数据要经过CPU存储转发，这种方式称为PIO。显然这种方式非常不合理，需要占用大量的CPU时间来读取文件，造成文件访问时系统几乎停止响应。</p>
-<p>DMA 后来，DMA（直接内存访问，Direct Memory Access）取代了PIO，它可以不经过CPU而直接进行磁盘<br>和内存（内核空间）的数据交换。在DMA模式下，CPU只需要向DMA控制器下达指令，让DMA控制器来处理数据的传送即可，DMA控制器通过系统总线来传输数据，传送完毕再通知CPU，这样就在很大程度上降低了CPU占有率，大大节省了系统资源，而它的传输速度与PIO的差异其实并不十分明显，因为这主要取决于慢速设备的速度。</p>
-<p>可以肯定的是，PIO模式的计算机我们现在已经很少见到了。</p>
-
+            <div class="post-button text-center">
+              <a class="btn" href="/IO模型-缓存IO与直接IO/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
           
+          <!--/noindex-->
         
       
     </div>
@@ -1830,7 +1828,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">44k</span>
+    <span title="站点总字数">45k</span>
   
 
   
@@ -1839,7 +1837,7 @@
       <i class="fa fa-coffee"></i>
     </span>
     
-    <span title="站点阅读时长">40 分钟</span>
+    <span title="站点阅读时长">41 分钟</span>
   
 </div>
 
