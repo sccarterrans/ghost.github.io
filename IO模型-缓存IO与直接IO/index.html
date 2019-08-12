@@ -118,7 +118,7 @@
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://sccarterrans.github.io/IO模型-缓存IO与直接IO/1.png">
 <meta property="og:image" content="https://sccarterrans.github.io/IO模型-缓存IO与直接IO/2.png">
-<meta property="og:updated_time" content="2019-08-12T16:35:42.269Z">
+<meta property="og:updated_time" content="2019-08-12T16:43:37.531Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="IO模型-缓存IO与直接IO">
 <meta name="twitter:description" content="PIO与DMA在介绍 I/O 模型之前，有必要简单地说说慢速 I/O 设备和内存之间的数据传输方式。  PIO的英文拼写是“Programming Input/Output Model”，PIO模式是一种通过CPU执行I/O端口指令来进行数据的读写的数据交换模式。是最早先的硬盘数据传输模式，数据传输速率低下，CPU占有率也很高，大量传输数据时会因为占用过多的CPU资源而导致系统停顿，无法进行其它的">
@@ -433,7 +433,7 @@
                 
               
 
-              <time title="创建时间：2019-08-13 00:34:04 / 修改时间：00:35:42" itemprop="dateCreated datePublished" datetime="2019-08-13T00:34:04+08:00">2019-08-13</time>
+              <time title="创建时间：2019-08-13 00:34:04 / 修改时间：00:43:37" itemprop="dateCreated datePublished" datetime="2019-08-13T00:34:04+08:00">2019-08-13</time>
             </span>
           
 
@@ -501,7 +501,7 @@
               
                 <span class="post-meta-item-text">本文字数：</span>
               
-              <span title="本文字数">1.7k</span>
+              <span title="本文字数">1.6k</span>
             </span>
           
 
@@ -513,7 +513,7 @@
               
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
               
-              <span title="阅读时长">2 分钟</span>
+              <span title="阅读时长">1 分钟</span>
             </span>
           
 
@@ -541,36 +541,30 @@
 
 <h1 id="缓存IO和直接IO"><a href="#缓存IO和直接IO" class="headerlink" title="缓存IO和直接IO"></a>缓存IO和直接IO</h1><figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">缓存IO：数据从磁盘先通过DMA模式拷贝到内核空间高速缓存页,再从高速缓存页通过cpu拷贝到用户空间应用缓存</span><br><span class="line">直接IO：数据从磁盘通过DMA模式拷贝到用户空间应用缓存</span><br></pre></td></tr></table></figure>
 
-<h2 id="缓存I-O"><a href="#缓存I-O" class="headerlink" title="缓存I/O"></a>缓存I/O</h2><p><img src="1.png" alt="缓存I/O"></p>
-<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">缓存I/O被称作为标准I/O，大多数文件系统的默认I/O操作都是缓存I/O</span><br></pre></td></tr></table></figure>
+<h2 id="缓存I-O"><a href="#缓存I-O" class="headerlink" title="缓存I/O"></a>缓存I/O</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">缓存I/O被称作为标准I/O，大多数文件系统的默认I/O操作都是缓存I/O</span><br></pre></td></tr></table></figure>
 
+<p><img src="1.png" alt="缓存I/O"></p>
 <ul>
 <li>读操作：</li>
 </ul>
-<p>操作系统检查内核空间的高速缓存页是否命中，如果命中直接返回；否则从物理磁盘中读取，然后load到内核缓存中。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">操作系统检查内核空间的高速缓存页是否命中，命中直接返回；否则从物理磁盘中读取，然后load到内核缓存中</span><br></pre></td></tr></table></figure>
+
 <ul>
 <li>写操作：</li>
 </ul>
-<p>​        进程调用SystemCall函数将用户空间应用缓存数据通过DMA的方式拷贝到内核空间高速页缓存；</p>
-<ol>
-<li>update系统守护进程会周期性地（一般每隔30秒）调用sync函数，定期冲洗内核块缓冲区数据写入磁盘。</li>
-<li>同时调用系统提供<strong>write</strong>函数立刻返回，等待flusher内核线程空闲时将数据写入磁盘。</li>
-<li>进程调用systemCall函数将用户空间应用缓存数据通过dma的方式拷贝到内核空间高速页缓存,同时掉用系统提供<strong>fsync</strong>函数将用户空间缓存的数据写入磁盘。</li>
-</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">进程调用SystemCall函数将用户空间应用缓存数据通过DMA的方式拷贝到内核空间高速页缓存</span><br><span class="line">1. update系统守护进程会周期性地(一般每隔30秒)调用sync函数，定期冲洗内核块缓冲区数据写入磁盘。</span><br><span class="line">2. 同时调用系统提供write函数立刻返回，等待flusher内核线程空闲时将数据写入磁盘。</span><br><span class="line">3. 进程调用systemCall函数将用户空间应用缓存数据通过dma的方式拷贝到内核空间高速页缓存,同时掉用系统提供fsync函数将用户空间缓存的数据写入磁盘。</span><br></pre></td></tr></table></figure>
+
 <ul>
 <li>缓存I/O的优点：</li>
 </ul>
-<ol>
-<li>分离了内核空间和用户空间，保护系统本身的运行安全，避免应用程序异常导致系统崩溃&lt;<a href="https://sccarterrans.github.io/Linux%E5%86%85%E6%A0%B8%E7%A9%BA%E9%97%B4%E5%92%8C%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4/">Linux内核空间和用户空间</a>&gt;</li>
-<li>减少缓存与磁盘的I/O磁盘,提升数据读取和写入的性能</li>
-</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1. 分离了内核空间和用户空间，保护系统本身的运行安全，避免应用程序异常导致系统崩溃</span><br><span class="line">2. 减少缓存与磁盘的I/O磁盘,提升数据读取和写入的性能</span><br></pre></td></tr></table></figure>
+
 <ul>
 <li>缓存I/O的缺点：</li>
 </ul>
-<ol>
-<li>数据传输过程中需要在应用程序地址空间（用户空间）和缓存（内核空间）之间进行多次数据拷贝操作，这些拷贝操作会给CPU以及内存带来一定的开销。</li>
-</ol>
-<h2 id="直接I-O"><a href="#直接I-O" class="headerlink" title="直接I/O"></a>直接I/O</h2><figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">直接IO就是应用程序直接访问磁盘数据，而不经过内核缓冲区，也就是绕过内核缓冲区,自己管理I/O缓存区，这样做的目</span><br><span class="line">的是减少一次从内核缓冲区到用户程序缓存的数据复制,Linux系统提供open()函数在调用时增加O_DIRECT参数选项，用它打开的文件便可以绕过内核缓冲区完成直接访问，这样便有效避免了CPU和内存的多余时间开销</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">数据传输过程中需要在应用程序地址空间（用户空间）和缓存（内核空间）之间进行多次数据拷贝操作，这些拷贝操作会给CPU以及内存带来一定的开销</span><br></pre></td></tr></table></figure>
+
+<h2 id="直接I-O"><a href="#直接I-O" class="headerlink" title="直接I/O"></a>直接I/O</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">直接IO就是应用程序直接访问磁盘数据，而不经过内核缓冲区，也就是绕过内核缓冲区,自己管理I/O缓存区，这样做的目</span><br><span class="line">的是减少一次从内核缓冲区到用户程序缓存的数据复制,Linux系统提供open()函数在调用时增加O_DIRECT参数选项，用它打开的文件便可以绕过内核缓冲区完成直接访问，这样便有效避免了CPU和内存的多余时间开销</span><br></pre></td></tr></table></figure>
 
 <p><img src="2.png" alt="直接I/O"></p>
 <ul>
