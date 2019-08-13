@@ -108,20 +108,20 @@
 
 
 
-  <meta name="description" content="同步I/O与异步I/O同步和异步是针对应用程序和内核的交互而言的，同步指的是用户进程触发IO操作并等待或者轮询的去查看IO操作是否就绪，而异步是指用户进程触发IO操作以后便开始做自己的事情，而当IO操作已经完成的时候会得到IO完成的通知。 1指的是用户空间和内核空间数据交互的方式  同步I/O 用户使用应用程序时获取数据的步骤如下： 12345从用户空间应用程序获取数据,命中则返回用户空间调用系统">
+  <meta name="description" content="同步I/O与异步I/O同步和异步是针对应用程序和内核的交互而言的，同步指的是用户进程触发IO操作并等待或者轮询的去查看IO操作是否就绪，而异步是指用户进程触发IO操作以后便开始做自己的事情，而当IO操作已经完成的时候会得到IO完成的通知。 1指的是用户空间和内核空间数据交互的方式">
 <meta name="keywords" content="Linux">
 <meta property="og:type" content="article">
 <meta property="og:title" content="IO模型-同步IO、异步IO、阻塞IO、非阻塞IO">
 <meta property="og:url" content="https://sccarterrans.github.io/IO模型-同步IO、异步IO、阻塞IO、非阻塞IO/index.html">
 <meta property="og:site_name" content="辉">
-<meta property="og:description" content="同步I/O与异步I/O同步和异步是针对应用程序和内核的交互而言的，同步指的是用户进程触发IO操作并等待或者轮询的去查看IO操作是否就绪，而异步是指用户进程触发IO操作以后便开始做自己的事情，而当IO操作已经完成的时候会得到IO完成的通知。 1指的是用户空间和内核空间数据交互的方式  同步I/O 用户使用应用程序时获取数据的步骤如下： 12345从用户空间应用程序获取数据,命中则返回用户空间调用系统">
+<meta property="og:description" content="同步I/O与异步I/O同步和异步是针对应用程序和内核的交互而言的，同步指的是用户进程触发IO操作并等待或者轮询的去查看IO操作是否就绪，而异步是指用户进程触发IO操作以后便开始做自己的事情，而当IO操作已经完成的时候会得到IO完成的通知。 1指的是用户空间和内核空间数据交互的方式">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://sccarterrans.github.io/IO模型-同步IO、异步IO、阻塞IO、非阻塞IO/1.png">
 <meta property="og:image" content="https://sccarterrans.github.io/IO模型-同步IO、异步IO、阻塞IO、非阻塞IO/2.png">
-<meta property="og:updated_time" content="2019-08-13T14:29:21.834Z">
+<meta property="og:updated_time" content="2019-08-13T14:30:20.924Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="IO模型-同步IO、异步IO、阻塞IO、非阻塞IO">
-<meta name="twitter:description" content="同步I/O与异步I/O同步和异步是针对应用程序和内核的交互而言的，同步指的是用户进程触发IO操作并等待或者轮询的去查看IO操作是否就绪，而异步是指用户进程触发IO操作以后便开始做自己的事情，而当IO操作已经完成的时候会得到IO完成的通知。 1指的是用户空间和内核空间数据交互的方式  同步I/O 用户使用应用程序时获取数据的步骤如下： 12345从用户空间应用程序获取数据,命中则返回用户空间调用系统">
+<meta name="twitter:description" content="同步I/O与异步I/O同步和异步是针对应用程序和内核的交互而言的，同步指的是用户进程触发IO操作并等待或者轮询的去查看IO操作是否就绪，而异步是指用户进程触发IO操作以后便开始做自己的事情，而当IO操作已经完成的时候会得到IO完成的通知。 1指的是用户空间和内核空间数据交互的方式">
 <meta name="twitter:image" content="https://sccarterrans.github.io/IO模型-同步IO、异步IO、阻塞IO、非阻塞IO/1.png">
 
 
@@ -433,7 +433,7 @@
                 
               
 
-              <time title="创建时间：2019-08-13 21:53:11 / 修改时间：22:29:21" itemprop="dateCreated datePublished" datetime="2019-08-13T21:53:11+08:00">2019-08-13</time>
+              <time title="创建时间：2019-08-13 21:53:11 / 修改时间：22:30:20" itemprop="dateCreated datePublished" datetime="2019-08-13T21:53:11+08:00">2019-08-13</time>
             </span>
           
 
@@ -501,7 +501,7 @@
               
                 <span class="post-meta-item-text">本文字数：</span>
               
-              <span title="本文字数">773</span>
+              <span title="本文字数">775</span>
             </span>
           
 
@@ -534,6 +534,8 @@
       
         <h2 id="同步I-O与异步I-O"><a href="#同步I-O与异步I-O" class="headerlink" title="同步I/O与异步I/O"></a>同步I/O与异步I/O</h2><p>同步和异步是针对应用程序和内核的交互而言的，同步指的是用户进程触发IO操作并等待或者轮询的去查看IO操作是否就绪，而异步是指用户进程触发IO操作以后便开始做自己的事情，而当IO操作已经完成的时候会得到IO完成的通知。</p>
 <figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">指的是用户空间和内核空间数据交互的方式</span><br></pre></td></tr></table></figure>
+
+<a id="more"></a>
 
 <h3 id="同步I-O"><a href="#同步I-O" class="headerlink" title="同步I/O"></a>同步I/O</h3><p><img src="1.png" alt="同步IO"></p>
 <p>用户使用应用程序时获取数据的步骤如下：</p>
