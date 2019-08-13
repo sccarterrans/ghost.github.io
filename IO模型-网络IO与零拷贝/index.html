@@ -108,22 +108,22 @@
 
 
 
-  <meta name="description" content="数组以下是数组在内存中存储结构和扩容过程。 array数组长度为4，现在需要放入第五个值，需要先扩容，在后边找到能容下新数组长度的连续空间">
-<meta name="keywords" content="Java基础">
+  <meta name="description" content="网络I/O与零拷贝普通的网络传输步骤如下 操作系统将数据从磁盘复制到操作系统内核的页缓存中 应用将数据从内核缓存复制到应用的缓存中 应用将数据写回内核的Socket缓存中 操作系统将数据从Socket缓存区复制到网卡缓存，然后将其通过网络发出">
+<meta name="keywords" content="Linux">
 <meta property="og:type" content="article">
-<meta property="og:title" content="ArrayList与LinkedList">
-<meta property="og:url" content="https://sccarterrans.github.io/ArrayList与LinkedList/index.html">
+<meta property="og:title" content="IO模型-网络IO与零拷贝">
+<meta property="og:url" content="https://sccarterrans.github.io/IO模型-网络IO与零拷贝/index.html">
 <meta property="og:site_name" content="辉">
-<meta property="og:description" content="数组以下是数组在内存中存储结构和扩容过程。 array数组长度为4，现在需要放入第五个值，需要先扩容，在后边找到能容下新数组长度的连续空间">
+<meta property="og:description" content="网络I/O与零拷贝普通的网络传输步骤如下 操作系统将数据从磁盘复制到操作系统内核的页缓存中 应用将数据从内核缓存复制到应用的缓存中 应用将数据写回内核的Socket缓存中 操作系统将数据从Socket缓存区复制到网卡缓存，然后将其通过网络发出">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://sccarterrans.github.io/ArrayList与LinkedList/2.1.png">
-<meta property="og:image" content="https://sccarterrans.github.io/ArrayList与LinkedList/2.2.png">
-<meta property="og:image" content="https://sccarterrans.github.io/ArrayList与LinkedList/3.png">
-<meta property="og:updated_time" content="2019-07-29T13:15:23.612Z">
+<meta property="og:image" content="https://sccarterrans.github.io/IO模型-网络IO与零拷贝/1.png">
+<meta property="og:image" content="https://sccarterrans.github.io/IO模型-网络IO与零拷贝/2.png">
+<meta property="og:image" content="https://sccarterrans.github.io/IO模型-网络IO与零拷贝/3.png">
+<meta property="og:updated_time" content="2019-08-13T13:35:57.086Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ArrayList与LinkedList">
-<meta name="twitter:description" content="数组以下是数组在内存中存储结构和扩容过程。 array数组长度为4，现在需要放入第五个值，需要先扩容，在后边找到能容下新数组长度的连续空间">
-<meta name="twitter:image" content="https://sccarterrans.github.io/ArrayList与LinkedList/2.1.png">
+<meta name="twitter:title" content="IO模型-网络IO与零拷贝">
+<meta name="twitter:description" content="网络I/O与零拷贝普通的网络传输步骤如下 操作系统将数据从磁盘复制到操作系统内核的页缓存中 应用将数据从内核缓存复制到应用的缓存中 应用将数据写回内核的Socket缓存中 操作系统将数据从Socket缓存区复制到网卡缓存，然后将其通过网络发出">
+<meta name="twitter:image" content="https://sccarterrans.github.io/IO模型-网络IO与零拷贝/1.png">
 
 
 
@@ -133,7 +133,7 @@
 
   
   
-  <link rel="canonical" href="https://sccarterrans.github.io/ArrayList与LinkedList/">
+  <link rel="canonical" href="https://sccarterrans.github.io/IO模型-网络IO与零拷贝/">
 
 
 
@@ -143,7 +143,7 @@
   };
 </script>
 
-  <title>ArrayList与LinkedList | 辉</title>
+  <title>IO模型-网络IO与零拷贝 | 辉</title>
   
 
 
@@ -390,7 +390,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://sccarterrans.github.io/ArrayList与LinkedList/">
+    <link itemprop="mainEntityOfPage" href="https://sccarterrans.github.io/IO模型-网络IO与零拷贝/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="辉">
@@ -407,7 +407,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">ArrayList与LinkedList
+          <h2 class="post-title" itemprop="name headline">IO模型-网络IO与零拷贝
 
               
             
@@ -434,7 +434,7 @@
                 
               
 
-              <time title="创建时间：2019-07-20 15:55:42" itemprop="dateCreated datePublished" datetime="2019-07-20T15:55:42+08:00">2019-07-20</time>
+              <time title="创建时间：2019-08-13 20:55:39 / 修改时间：21:35:57" itemprop="dateCreated datePublished" datetime="2019-08-13T20:55:39+08:00">2019-08-13</time>
             </span>
           
 
@@ -442,18 +442,23 @@
             
 
             
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-07-29 21:15:23" itemprop="dateModified" datetime="2019-07-29T21:15:23+08:00">2019-07-29</time>
-              </span>
-            
           
 
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a></span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -466,8 +471,8 @@
                 </span>
             
                 <span class="post-meta-item-text">评论数：</span>
-                <a href="/ArrayList与LinkedList/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="ArrayList与LinkedList/" itemprop="commentCount"></span>
+                <a href="/IO模型-网络IO与零拷贝/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="IO模型-网络IO与零拷贝/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -497,7 +502,7 @@
               
                 <span class="post-meta-item-text">本文字数：</span>
               
-              <span title="本文字数">977</span>
+              <span title="本文字数">984</span>
             </span>
           
 
@@ -528,43 +533,38 @@
       
 
       
-        <h3 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h3><p>以下是数组在内存中存储结构和扩容过程。</p>
-<p>array数组长度为4，现在需要放入第五个值，需要先扩容，在后边找到能容下新数组长度的连续空间</p>
+        <h1 id="网络I-O与零拷贝"><a href="#网络I-O与零拷贝" class="headerlink" title="网络I/O与零拷贝"></a>网络I/O与零拷贝</h1><h4 id="普通的网络传输步骤如下"><a href="#普通的网络传输步骤如下" class="headerlink" title="普通的网络传输步骤如下"></a>普通的网络传输步骤如下</h4><ul>
+<li>操作系统将数据从磁盘复制到操作系统内核的页缓存中</li>
+<li>应用将数据从内核缓存复制到应用的缓存中</li>
+<li>应用将数据写回内核的Socket缓存中</li>
+<li>操作系统将数据从Socket缓存区复制到网卡缓存，然后将其通过网络发出</li>
+</ul>
 <a id="more"></a>
 
-<p><img src="2.1.png" alt></p>
+<p><img src="1.png" alt="普通的网络传输"></p>
 <ul>
-<li><p>新增数据空间判断</p>
-<p>新增数据的时候需要判断当前是否有空闲空间存储数据</p>
-</li>
-<li><p>扩容需要申请新的连续空闲空间</p>
-<p>上图为例，长度4需要扩容到8。必须找到长度为8的连续空间才能新建扩容数组</p>
-</li>
-<li><p>把老的数组复制过去，追加新的内容</p>
-</li>
-<li><p>回收老的数组空间</p>
-</li>
+<li>当调用read系统调用时，通过DMA（Direct Memory Access）将数据copy到内核模式</li>
+<li>然后由CPU控制将内核模式数据copy到用户模式下的 buffer中</li>
+<li>read调用完成后，write调用首先将用户模式下 buffer中的数据copy到内核模式下的socket buffer中</li>
+<li>最后通过DMA copy将内核模式下的socket buffer中的数据copy到网卡设备中传送</li>
 </ul>
-<h3 id="链表"><a href="#链表" class="headerlink" title="链表"></a>链表</h3><p><img src="2.2.png" alt></p>
+<p>从上面的过程可以看出，数据白白从内核模式到用户模式走了一圈，浪费了两次copy，而这两次copy都是CPU<br>copy，即占用CPU资源</p>
+<h4 id="sendfile-零拷贝-kafka用到此特性"><a href="#sendfile-零拷贝-kafka用到此特性" class="headerlink" title="sendfile/零拷贝(kafka用到此特性)"></a>sendfile/零拷贝(kafka用到此特性)</h4><p><img src="2.png" alt="零拷贝"></p>
+<p>通过sendfile传送文件只需要一次系统调用,当调用 sendfile时：</p>
 <ul>
-<li>寻找一个元素空间插入即可，不需要连续空间</li>
-<li>链表长度大小不定</li>
-<li>需要寻址，节省空间</li>
+<li>首先通过DMA copy将数据从磁盘读取到kernel buffer中</li>
+<li>然后通过CPU copy将数据从kernel buffer copy到sokcet buffer中</li>
+<li>最终通过DMA copy将socket buffer中数据copy到网卡buffer中发送</li>
 </ul>
-<h3 id="时间复杂度对比"><a href="#时间复杂度对比" class="headerlink" title="时间复杂度对比"></a>时间复杂度对比</h3><p><img src="3.png" alt></p>
+<p>sendfile与read/write方式相比，少了 一次模式切换一次CPU copy。但是从上述过程中也可以发现从kernel buffer中将数据copy到socket buffer是没必要的</p>
+<h4 id="改进版零拷贝"><a href="#改进版零拷贝" class="headerlink" title="改进版零拷贝"></a>改进版零拷贝</h4><p><img src="3.png" alt="改进版零拷贝"></p>
+<p>改进后的处理过程如下：</p>
 <ul>
-<li><p>O(1)就是最低的时空复杂度了，耗时/耗空间与输入数据大小无关，无论输入数据增大多少倍，耗时/耗空间都不变。 <strong>哈希算法就是典型的O(1)时间复杂度</strong>，无论数据规模多大，都可以在一次计算后找到目标（不考虑冲突的话）</p>
-</li>
-<li><p>O(N)就代表数据量增大几倍，耗时也增大几倍。比如常见的遍历算法，就是O(n)；</p>
-</li>
+<li>DMA copy将磁盘数据copy到kernel buffer中</li>
+<li>向socket buffer中追加当前要发送的数据在kernel buffer中的位置和偏移量</li>
+<li>DMA gather copy根据socket buffer中的位置和偏移量直接将kernel buffer中的数据copy到网卡上</li>
 </ul>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
-<li>ArrayList是由数组组成，大小固定，不适合动态存储，LinkedList由双向列表组成，大小可变，扩展性强；ArrayList扩容大小为1.5倍(newCapacity = oldCapacity + (oldCapacity &gt;&gt; 1))</li>
-<li>ArrayList查询和修改方便，只需要修改和获取指定的数组值，LinkedList新增和删除方便，因为只需要添加和删除节点</li>
-<li>数据结构都是存储在内存中，一般初始化时指定大小都是2的倍数，计算机分配空间都是使用次幂去分配，好处是能减少碎片空间，ArrayList扩容时需要查询连续的空间，而LinkedList只需要查询到下一个空间即可</li>
-<li>同样是O(N)次遍历，ArrayList快于LinkedList，因为CPU缓存一次读取多块，ArrayList获取空间块链是连续的，而Linked获取空间块链可能是跳跃的，获取下一个元素需要利用内存中的下标去查找，CPU缓存读取速度大于内存</li>
-<li>forEach循环时删除元素会爆ConcurrentModificationException异常,要使用迭代器(Iterator),或者线程安全的集合,原因是java.util.ArrayList.Itr#checkForComodification方法中modCount != expectedModCount</li>
-</ul>
+<p>经过上述过程，数据只经过了2次copy就从磁盘传送出去了。（事实上这个Zero copy是针对内核来讲的，数据在内核模式下是Zero－copy的）。当前许多高性能http server都引入了sendfile机制，如nginx，lighttpd等</p>
 
       
     </div>
@@ -636,7 +636,7 @@
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
     
-    <a href="https://sccarterrans.github.io/ArrayList与LinkedList/" title="ArrayList与LinkedList">https://sccarterrans.github.io/ArrayList与LinkedList/</a>
+    <a href="https://sccarterrans.github.io/IO模型-网络IO与零拷贝/" title="IO模型-网络IO与零拷贝">https://sccarterrans.github.io/IO模型-网络IO与零拷贝/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！</li>
@@ -652,7 +652,7 @@
         
         <div class="post-tags">
           
-            <a href="/tags/Java基础/" rel="tag"># Java基础</a>
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
           
         </div>
       
@@ -665,8 +665,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/Linux内核空间和用户空间/" rel="next" title="Linux内核空间和用户空间">
-                <i class="fa fa-chevron-left"></i> Linux内核空间和用户空间
+              <a href="/IO模型-缓存IO与直接IO/" rel="next" title="IO模型-缓存IO与直接IO">
+                <i class="fa fa-chevron-left"></i> IO模型-缓存IO与直接IO
               </a>
             
           </div>
@@ -674,10 +674,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/微服务注册中心-Eureka-架构深入解读/" rel="prev" title="微服务注册中心 Eureka 架构深入解读（转载）">
-                微服务注册中心 Eureka 架构深入解读（转载） <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -887,7 +883,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#数组"><span class="nav-number">1.</span> <span class="nav-text">数组</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#链表"><span class="nav-number">2.</span> <span class="nav-text">链表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#时间复杂度对比"><span class="nav-number">3.</span> <span class="nav-text">时间复杂度对比</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#网络I-O与零拷贝"><span class="nav-number">1.</span> <span class="nav-text">网络I/O与零拷贝</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#普通的网络传输步骤如下"><span class="nav-number">1.0.0.1.</span> <span class="nav-text">普通的网络传输步骤如下</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#sendfile-零拷贝-kafka用到此特性"><span class="nav-number">1.0.0.2.</span> <span class="nav-text">sendfile/零拷贝(kafka用到此特性)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#改进版零拷贝"><span class="nav-number">1.0.0.3.</span> <span class="nav-text">改进版零拷贝</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -1098,9 +1094,9 @@
 
 <script>
   var disqus_config = function() {
-    this.page.url = "https://sccarterrans.github.io/ArrayList与LinkedList/";
-    this.page.identifier = "ArrayList与LinkedList/";
-    this.page.title = 'ArrayList与LinkedList';
+    this.page.url = "https://sccarterrans.github.io/IO模型-网络IO与零拷贝/";
+    this.page.identifier = "IO模型-网络IO与零拷贝/";
+    this.page.title = 'IO模型-网络IO与零拷贝';
     };
   function loadComments() {
     var d = document, s = d.createElement('script');
@@ -1124,7 +1120,7 @@
 <!-- 
 <script>
   window.livereOptions = {
-    refer: 'ArrayList与LinkedList/'
+    refer: 'IO模型-网络IO与零拷贝/'
   };
   (function(d, s) {
     var j, e = d.getElementsByTagName(s)[0];
