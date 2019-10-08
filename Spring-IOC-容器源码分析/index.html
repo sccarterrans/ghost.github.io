@@ -108,17 +108,22 @@
 
 
 
-  <meta name="description" content="做个靠谱的人">
+  <meta name="description" content="[TOC] Spring 最重要的概念是 IOC 和 AOP，本篇文章其实就是要带领大家来分析下 Spring 的 IOC 容器。既然大家平时都要用到 Spring，怎么可以不好好了解 Spring 呢？阅读本文并不能让你成为 Spring 专家，不过一定有助于大家理解 Spring 的很多概念，帮助大家排查应用中和 Spring 相关的一些问题。 本文采用的源码版本是 4.3.11.RELEAS">
 <meta name="keywords" content="Java">
-<meta property="og:type" content="website">
-<meta property="og:title" content="辉">
-<meta property="og:url" content="https://sccarterrans.github.io/index.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring IOC 容器源码分析">
+<meta property="og:url" content="https://sccarterrans.github.io/Spring-IOC-容器源码分析/index.html">
 <meta property="og:site_name" content="辉">
-<meta property="og:description" content="做个靠谱的人">
+<meta property="og:description" content="[TOC] Spring 最重要的概念是 IOC 和 AOP，本篇文章其实就是要带领大家来分析下 Spring 的 IOC 容器。既然大家平时都要用到 Spring，怎么可以不好好了解 Spring 呢？阅读本文并不能让你成为 Spring 专家，不过一定有助于大家理解 Spring 的很多概念，帮助大家排查应用中和 Spring 相关的一些问题。 本文采用的源码版本是 4.3.11.RELEAS">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://sccarterrans.github.io/Spring-IOC-容器源码分析/1.png">
+<meta property="og:image" content="https://sccarterrans.github.io/Spring-IOC-容器源码分析/2.png">
+<meta property="og:image" content="https://sccarterrans.github.io/Spring-IOC-容器源码分析/3.png">
+<meta property="og:updated_time" content="2019-10-08T08:01:53.150Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="辉">
-<meta name="twitter:description" content="做个靠谱的人">
+<meta name="twitter:title" content="Spring IOC 容器源码分析">
+<meta name="twitter:description" content="[TOC] Spring 最重要的概念是 IOC 和 AOP，本篇文章其实就是要带领大家来分析下 Spring 的 IOC 容器。既然大家平时都要用到 Spring，怎么可以不好好了解 Spring 呢？阅读本文并不能让你成为 Spring 专家，不过一定有助于大家理解 Spring 的很多概念，帮助大家排查应用中和 Spring 相关的一些问题。 本文采用的源码版本是 4.3.11.RELEAS">
+<meta name="twitter:image" content="https://sccarterrans.github.io/Spring-IOC-容器源码分析/1.png">
 
 
 
@@ -128,7 +133,7 @@
 
   
   
-  <link rel="canonical" href="https://sccarterrans.github.io/">
+  <link rel="canonical" href="https://sccarterrans.github.io/Spring-IOC-容器源码分析/">
 
 
 
@@ -138,7 +143,7 @@
   };
 </script>
 
-  <title>辉 - 今天所有的辛酸和努力都会在不经意间闪耀</title>
+  <title>Spring IOC 容器源码分析 | 辉</title>
   
 
 
@@ -186,8 +191,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -229,7 +233,7 @@
         
         
           
-          <li class="menu-item menu-item-home menu-item-active">
+          <li class="menu-item menu-item-home">
 
     
     
@@ -369,9 +373,9 @@
           
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -403,10 +407,8 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/Spring-IOC-容器源码分析/" class="post-title-link" itemprop="url">Spring IOC 容器源码分析</a>
+          <h2 class="post-title" itemprop="name headline">Spring IOC 容器源码分析
+
               
             
           </h2>
@@ -480,6 +482,14 @@
           
 
           
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+                 阅读次数： 
+                <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+              </span>
+            </span>
+          
 
           
 
@@ -523,9 +533,7 @@
       
 
       
-        
-          
-            <p>[TOC]</p>
+        <p>[TOC]</p>
 <p>Spring 最重要的概念是 IOC 和 AOP，本篇文章其实就是要带领大家来分析下 Spring 的 IOC 容器。既然大家平时都要用到 Spring，怎么可以不好好了解 Spring 呢？阅读本文并不能让你成为 Spring 专家，不过一定有助于大家理解 Spring 的很多概念，帮助大家排查应用中和 Spring 相关的一些问题。</p>
 <p>本文采用的源码版本是 4.3.11.RELEASE，算是 5.0.x 前比较新的版本了。为了降低难度，本文所说的所有的内容都是基于 xml 的配置的方式，实际使用已经很少人这么做了，至少不是纯 xml 配置，不过从理解源码的角度来看用这种方式来说无疑是最合适的。</p>
 <p>阅读建议：读者至少需要知道怎么配置 Spring，了解 Spring 中的各种概念，少部分内容我还假设读者使用过 SpringMVC。本文要说的 IOC 总体来说有两处地方最重要，一个是创建 Bean 容器，一个是初始化 Bean，如果读者觉得一次性看完本文压力有点大，那么可以按这个思路分两次消化。读者不一定对 Spring 容器的源码感兴趣，也许附录部分介绍的知识对读者有些许作用。</p>
@@ -998,14 +1006,14 @@
 <p>本文的缺陷在于对 Spring 预初始化 singleton beans 的过程分析不够，主要是代码量真的比较大，分支旁路众多。同时，虽然附录条目不少，但是庞大的 Spring 真的引出了很多的概念，希望日后有精力可以慢慢补充一些。</p>
 <p>（全文完）</p>
 
-          
-        
       
     </div>
 
     
 
     
+      
+    
 
     
     
@@ -1017,865 +1025,92 @@
       
     
     
+      <div>
+        <div id="reward-container">
+  <div>觉得文章有用的话，欢迎点赞打赏~</div>
+  <button id="reward-button" disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
 
     
+      
+      
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/wechatpay.jpg" alt="辉 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+      
+      
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/alipay.jpg" alt="辉 支付宝">
+        <p>支付宝</p>
+      </div>
+    
 
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
   </div>
-  
-  
-  
-  </article>
+</div>
 
+      </div>
+    
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://sccarterrans.github.io/Nginx概述/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="辉">
-      <meta itemprop="description" content="做个靠谱的人">
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="辉">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/Nginx概述/" class="post-title-link" itemprop="url">Nginx概述</a>
-              
-            
-          </h2>
+      <div>
         
 
-        <div class="post-meta">
-		
-		
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-08-24 22:40:37" itemprop="dateCreated datePublished" datetime="2019-08-24T22:40:37+08:00">2019-08-24</time>
-            </span>
-          
-
-          
-            
-
-            
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-08-26 09:35:03" itemprop="dateModified" datetime="2019-08-26T09:35:03+08:00">2019-08-26</time>
-              </span>
-            
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Nginx/" itemprop="url" rel="index"><span itemprop="name">Nginx</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-              
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-            
-                <span class="post-meta-item-text">评论数：</span>
-                <a href="/Nginx概述/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Nginx概述/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-file-word-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">本文字数：</span>
-              
-              <span title="本文字数">1.4k</span>
-            </span>
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-clock-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              
-              <span title="阅读时长">1 分钟</span>
-            </span>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="1-Nginx简介"><a href="#1-Nginx简介" class="headerlink" title="1.Nginx简介"></a>1.Nginx简介</h2><p>Nginx (engine x) 是一个轻量级的、高性能的、基于Http的、反向代理服务器，静态web服务器。<br>Nginx最初是由俄罗斯人Igor Sysoev（伊戈尔·赛索耶夫）使用C语言为俄罗斯访问量第二的Rambler.ru站点开发的一款服务器。2004年10月发布第一个版本。<br>Nginx的官网： <a href="http://nginx.org" target="_blank" rel="noopener">http://nginx.org</a><br>国内大型的站点，例如百度、京东、新浪、网易、腾讯、淘宝等，都使用了Nginx。<br><a href="https://www.netcraft.com/" target="_blank" rel="noopener">https://www.netcraft.com/</a></p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/Nginx概述/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
 
 
-    
-      
 
   
 
-  
-  
-  
 
-  
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://sccarterrans.github.io/IO模型-同步IO、异步IO、阻塞IO、非阻塞IO/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="辉">
-      <meta itemprop="description" content="做个靠谱的人">
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="辉">
-    </span>
-
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>辉</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
     
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/IO模型-同步IO、异步IO、阻塞IO、非阻塞IO/" class="post-title-link" itemprop="url">IO模型-同步IO、异步IO、阻塞IO、非阻塞IO</a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-		
-		
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-08-13 21:53:11" itemprop="dateCreated datePublished" datetime="2019-08-13T21:53:11+08:00">2019-08-13</time>
-            </span>
-          
-
-          
-            
-
-            
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-08-15 22:07:27" itemprop="dateModified" datetime="2019-08-15T22:07:27+08:00">2019-08-15</time>
-              </span>
-            
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-              
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-            
-                <span class="post-meta-item-text">评论数：</span>
-                <a href="/IO模型-同步IO、异步IO、阻塞IO、非阻塞IO/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="IO模型-同步IO、异步IO、阻塞IO、非阻塞IO/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-file-word-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">本文字数：</span>
-              
-              <span title="本文字数">776</span>
-            </span>
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-clock-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              
-              <span title="阅读时长">1 分钟</span>
-            </span>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="同步I-O与异步I-O"><a href="#同步I-O与异步I-O" class="headerlink" title="同步I/O与异步I/O"></a>同步I/O与异步I/O</h2><p>同步和异步是针对应用程序和内核的交互而言的，同步指的是用户进程触发IO操作并等待或者轮询的去查看IO操作是否就绪，而异步是指用户进程触发IO操作以后便开始做自己的事情，而当IO操作已经完成的时候会得到IO完成的通知。</p>
-<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">指的是用户空间和内核空间数据交互的方式</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/IO模型-同步IO、异步IO、阻塞IO、非阻塞IO/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://sccarterrans.github.io/IO模型-网络IO与零拷贝/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="辉">
-      <meta itemprop="description" content="做个靠谱的人">
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="辉">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/IO模型-网络IO与零拷贝/" class="post-title-link" itemprop="url">IO模型-网络IO与零拷贝</a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-		
-		
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-08-13 20:55:39 / 修改时间：21:35:57" itemprop="dateCreated datePublished" datetime="2019-08-13T20:55:39+08:00">2019-08-13</time>
-            </span>
-          
-
-          
-            
-
-            
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-              
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-            
-                <span class="post-meta-item-text">评论数：</span>
-                <a href="/IO模型-网络IO与零拷贝/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="IO模型-网络IO与零拷贝/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-file-word-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">本文字数：</span>
-              
-              <span title="本文字数">984</span>
-            </span>
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-clock-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              
-              <span title="阅读时长">1 分钟</span>
-            </span>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="网络I-O与零拷贝"><a href="#网络I-O与零拷贝" class="headerlink" title="网络I/O与零拷贝"></a>网络I/O与零拷贝</h1><h4 id="普通的网络传输步骤如下"><a href="#普通的网络传输步骤如下" class="headerlink" title="普通的网络传输步骤如下"></a>普通的网络传输步骤如下</h4><ul>
-<li>操作系统将数据从磁盘复制到操作系统内核的页缓存中</li>
-<li>应用将数据从内核缓存复制到应用的缓存中</li>
-<li>应用将数据写回内核的Socket缓存中</li>
-<li>操作系统将数据从Socket缓存区复制到网卡缓存，然后将其通过网络发出</li>
+    <a href="https://sccarterrans.github.io/Spring-IOC-容器源码分析/" title="Spring IOC 容器源码分析">https://sccarterrans.github.io/Spring-IOC-容器源码分析/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！</li>
 </ul>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/IO模型-网络IO与零拷贝/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
 
-    
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
+      </div>
     
 
     <footer class="post-footer">
       
 
       
-
-      
-
       
       
-        <div class="post-eof"></div>
+
       
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://sccarterrans.github.io/IO模型-缓存IO与直接IO/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="辉">
-      <meta itemprop="description" content="做个靠谱的人">
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="辉">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/IO模型-缓存IO与直接IO/" class="post-title-link" itemprop="url">IO模型-缓存IO与直接IO</a>
-              
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
             
-          </h2>
-        
-
-        <div class="post-meta">
-		
-		
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-08-13 00:34:04 / 修改时间：20:25:15" itemprop="dateCreated datePublished" datetime="2019-08-13T00:34:04+08:00">2019-08-13</time>
-            </span>
-          
-
-          
+              <a href="/Nginx概述/" rel="next" title="Nginx概述">
+                <i class="fa fa-chevron-left"></i> Nginx概述
+              </a>
             
+          </div>
 
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
             
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-              
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-            
-                <span class="post-meta-item-text">评论数：</span>
-                <a href="/IO模型-缓存IO与直接IO/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="IO模型-缓存IO与直接IO/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-file-word-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">本文字数：</span>
-              
-              <span title="本文字数">1.6k</span>
-            </span>
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-clock-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              
-              <span title="阅读时长">1 分钟</span>
-            </span>
-          
-
-          
-
+          </div>
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          <h1 id="PIO与DMA"><a href="#PIO与DMA" class="headerlink" title="PIO与DMA"></a>PIO与DMA</h1><p>在介绍 I/O 模型之前，有必要简单地说说慢速 I/O 设备和内存之间的数据传输方式。</p>
-<ul>
-<li>PIO的英文拼写是“Programming Input/Output Model”，PIO模式是一种通过CPU执行I/O端口指令来进行数据的读写的数据交换模式。是最早先的硬盘数据传输模式，数据传输速率低下，CPU占有率也很高，大量传输数据时会因为占用过多的CPU资源而导致系统停顿，无法进行其它的操作。</li>
-<li>DMA的英文拼写是“Direct Memory Access”，汉语的意思就是直接内存访问，是一种不经过CPU而直接从内存了存取数据的数据交换模式。PIO模式下硬盘和内存之间的数据传输是由CPU来控制的；而在DMA模式下，CPU只须向DMA控制器下达指令，让DMA控制器来处理数的传送，数据传送完毕再把信息反馈给CPU，这样就很大程度上减轻了CPU资源占有率。</li>
-</ul>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/IO模型-缓存IO与直接IO/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -1885,1064 +1120,22 @@
   </article>
 
 
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://sccarterrans.github.io/MySQL之explain/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="辉">
-      <meta itemprop="description" content="做个靠谱的人">
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="辉">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/MySQL之explain/" class="post-title-link" itemprop="url">MySQL之explain</a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-		
-		
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-08-05 22:19:00 / 修改时间：23:07:38" itemprop="dateCreated datePublished" datetime="2019-08-05T22:19:00+08:00">2019-08-05</time>
-            </span>
-          
-
-          
-            
-
-            
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Mysql/" itemprop="url" rel="index"><span itemprop="name">Mysql</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-              
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-            
-                <span class="post-meta-item-text">评论数：</span>
-                <a href="/MySQL之explain/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="MySQL之explain/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-file-word-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">本文字数：</span>
-              
-              <span title="本文字数">29k</span>
-            </span>
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-clock-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              
-              <span title="阅读时长">26 分钟</span>
-            </span>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="分享主题"><a href="#分享主题" class="headerlink" title="分享主题"></a>分享主题</h1><p>mysql explain查询计划</p>
-<h2 id="分享目标"><a href="#分享目标" class="headerlink" title="分享目标"></a>分享目标</h2><ol>
-<li>掌握最左前缀原则</li>
-<li>掌握explain查询计划显示索引是否被使用到</li>
-<li>掌握如何正确使用索引，才不会引起索引失效</li>
-</ol>
-<h2 id="查看执行计划"><a href="#查看执行计划" class="headerlink" title="查看执行计划"></a>查看执行计划</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>MySQL 提供了一个 EXPLAIN 命令, 它可以对 SELECT 语句的执行计划进行分析, 并输出 SELECT 执行的详细信息, 以供开发人员针对性优化.使用explain这个命令来查看一个这些SQL语句的执行计划，查看该SQL语句有没有使用上了索引，有没有做全表扫描，这都可以通过explain命令来查看。可以通过explain命令深入了解MySQL的基于开销的优化器，还可以获得很多可能被优化器考虑到的访问策略的细节，以及当运行SQL语句时哪种策略预计会被优化器采用。</p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/MySQL之explain/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
   </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://sccarterrans.github.io/MySQL索引之谜/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="辉">
-      <meta itemprop="description" content="做个靠谱的人">
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="辉">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/MySQL索引之谜/" class="post-title-link" itemprop="url">MySQL索引之谜</a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-		
-		
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-08-05 21:24:26 / 修改时间：23:10:02" itemprop="dateCreated datePublished" datetime="2019-08-05T21:24:26+08:00">2019-08-05</time>
-            </span>
-          
-
-          
-            
-
-            
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Mysql/" itemprop="url" rel="index"><span itemprop="name">Mysql</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-              
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-            
-                <span class="post-meta-item-text">评论数：</span>
-                <a href="/MySQL索引之谜/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="MySQL索引之谜/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-file-word-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">本文字数：</span>
-              
-              <span title="本文字数">5.9k</span>
-            </span>
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-clock-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              
-              <span title="阅读时长">5 分钟</span>
-            </span>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="分享主题"><a href="#分享主题" class="headerlink" title="分享主题"></a>分享主题</h1><p>MSQL架构、索引介绍及原理</p>
-<h1 id="分享目标"><a href="#分享目标" class="headerlink" title="分享目标"></a>分享目标</h1><ol>
-<li>理解MySQL架构组件及功能</li>
-<li>理解MySQL执行流程</li>
-<li>掌握MySQL中的表数据和索引在底层是如何被存储</li>
-<li>掌握聚集索引（IOT索引组织表）和非聚集索引（堆组织表）的存储方式</li>
-<li>掌握索引覆盖和回表概念</li>
-</ol>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/MySQL索引之谜/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://sccarterrans.github.io/微服务注册中心-Eureka-架构深入解读/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="辉">
-      <meta itemprop="description" content="做个靠谱的人">
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="辉">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/微服务注册中心-Eureka-架构深入解读/" class="post-title-link" itemprop="url">微服务注册中心 Eureka 架构深入解读（转载）</a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-		
-		
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-07-20 17:55:42" itemprop="dateCreated datePublished" datetime="2019-07-20T17:55:42+08:00">2019-07-20</time>
-            </span>
-          
-
-          
-            
-
-            
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-07-29 17:05:50" itemprop="dateModified" datetime="2019-07-29T17:05:50+08:00">2019-07-29</time>
-              </span>
-            
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/微服务/" itemprop="url" rel="index"><span itemprop="name">微服务</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-              
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-            
-                <span class="post-meta-item-text">评论数：</span>
-                <a href="/微服务注册中心-Eureka-架构深入解读/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="微服务注册中心-Eureka-架构深入解读/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-file-word-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">本文字数：</span>
-              
-              <span title="本文字数">5.9k</span>
-            </span>
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-clock-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              
-              <span title="阅读时长">5 分钟</span>
-            </span>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>微服务架构中最核心的部分是服务治理，服务治理最基础的组件是注册中心。随着微服务架构的发展，出现了很多微服务架构的解决方案，其中包括我们熟知的 Dubbo 和 Spring Cloud。</p>
-<p>关于注册中心的解决方案，dubbo 支持了 Zookeeper、Redis、Multicast 和 Simple，官方推荐 Zookeeper。Spring Cloud 支持了 Zookeeper、Consul 和 Eureka，官方推荐 Eureka。</p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/微服务注册中心-Eureka-架构深入解读/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://sccarterrans.github.io/ArrayList与LinkedList/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="辉">
-      <meta itemprop="description" content="做个靠谱的人">
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="辉">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/ArrayList与LinkedList/" class="post-title-link" itemprop="url">ArrayList与LinkedList</a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-		
-		
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-07-20 15:55:42" itemprop="dateCreated datePublished" datetime="2019-07-20T15:55:42+08:00">2019-07-20</time>
-            </span>
-          
-
-          
-            
-
-            
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-07-29 21:15:23" itemprop="dateModified" datetime="2019-07-29T21:15:23+08:00">2019-07-29</time>
-              </span>
-            
-          
-
-          
-
-          
-            
-            
-              
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-            
-                <span class="post-meta-item-text">评论数：</span>
-                <a href="/ArrayList与LinkedList/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="ArrayList与LinkedList/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-file-word-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">本文字数：</span>
-              
-              <span title="本文字数">977</span>
-            </span>
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-clock-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              
-              <span title="阅读时长">1 分钟</span>
-            </span>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h3><p>以下是数组在内存中存储结构和扩容过程。</p>
-<p>array数组长度为4，现在需要放入第五个值，需要先扩容，在后边找到能容下新数组长度的连续空间</p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/ArrayList与LinkedList/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://sccarterrans.github.io/Linux内核空间和用户空间/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="辉">
-      <meta itemprop="description" content="做个靠谱的人">
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="辉">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/Linux内核空间和用户空间/" class="post-title-link" itemprop="url">Linux内核空间和用户空间</a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-		
-		
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-07-17 23:41:59" itemprop="dateCreated datePublished" datetime="2019-07-17T23:41:59+08:00">2019-07-17</time>
-            </span>
-          
-
-          
-            
-
-            
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-08-24 22:44:00" itemprop="dateModified" datetime="2019-08-24T22:44:00+08:00">2019-08-24</time>
-              </span>
-            
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-              
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-            
-                <span class="post-meta-item-text">评论数：</span>
-                <a href="/Linux内核空间和用户空间/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="Linux内核空间和用户空间/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-file-word-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">本文字数：</span>
-              
-              <span title="本文字数">1.9k</span>
-            </span>
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-clock-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              
-              <span title="阅读时长">2 分钟</span>
-            </span>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="Rings"><a href="#Rings" class="headerlink" title="Rings"></a>Rings</h3><p>在计算机科学中, <strong>分级保护域</strong>（英语：hierarchical protection domains），经常被叫作<strong>保护环</strong>（Protection Rings），又称<strong>环型保护</strong>（Rings Protection）、<strong>CPU环</strong>（CPU Rings），简称Rings。这是一种用来在发生故障时保护数据和功能，提升容错度，避免恶意操作 ，提升计算机安全的设计方式。</p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/Linux内核空间和用户空间/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-  </section>
-
-  
 
 
           </div>
           
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+      </div>
+    </div>
+
+  
+
+
 
 
         </div>
@@ -2963,8 +1156,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -3107,6 +1309,23 @@
         </div>
       </div>
 
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BeanFactory-简介"><span class="nav-number">2.</span> <span class="nav-text">BeanFactory 简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#启动过程分析"><span class="nav-number">3.</span> <span class="nav-text">启动过程分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建-Bean-容器前的准备工作"><span class="nav-number">3.1.</span> <span class="nav-text">创建 Bean 容器前的准备工作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建-Bean-容器，加载并注册-Bean"><span class="nav-number">3.2.</span> <span class="nav-text">创建 Bean 容器，加载并注册 Bean</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#BeanDefinition-接口定义"><span class="nav-number">3.2.1.</span> <span class="nav-text">BeanDefinition 接口定义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#customizeBeanFactory"><span class="nav-number">3.2.2.</span> <span class="nav-text">customizeBeanFactory</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#加载-Bean-loadBeanDefinitions"><span class="nav-number">3.2.3.</span> <span class="nav-text">加载 Bean: loadBeanDefinitions</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#doRegisterBeanDefinitions："><span class="nav-number">3.2.3.1.</span> <span class="nav-text">doRegisterBeanDefinitions：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#processBeanDefinition-解析-bean-标签"><span class="nav-number">3.2.3.2.</span> <span class="nav-text">processBeanDefinition 解析 bean 标签</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#注册-Bean"><span class="nav-number">3.2.3.3.</span> <span class="nav-text">注册 Bean</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Bean-容器实例化完成后"><span class="nav-number">3.3.</span> <span class="nav-text">Bean 容器实例化完成后</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#准备-Bean-容器-prepareBeanFactory"><span class="nav-number">3.4.</span> <span class="nav-text">准备 Bean 容器: prepareBeanFactory</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#初始化所有的-singleton-beans"><span class="nav-number">3.5.</span> <span class="nav-text">初始化所有的 singleton beans</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#preInstantiateSingletons"><span class="nav-number">3.5.1.</span> <span class="nav-text">preInstantiateSingletons</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#getBean"><span class="nav-number">3.5.2.</span> <span class="nav-text">getBean</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#创建-Bean"><span class="nav-number">3.5.3.</span> <span class="nav-text">创建 Bean</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#创建-Bean-实例"><span class="nav-number">3.5.3.1.</span> <span class="nav-text">创建 Bean 实例</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#bean-属性注入"><span class="nav-number">3.5.3.2.</span> <span class="nav-text">bean 属性注入</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#initializeBean"><span class="nav-number">3.5.3.3.</span> <span class="nav-text">initializeBean</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#附录"><span class="nav-number">4.</span> <span class="nav-text">附录</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#id-和-name"><span class="nav-number">4.1.</span> <span class="nav-text">id 和 name</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置是否允许-Bean-覆盖、是否允许循环依赖"><span class="nav-number">4.2.</span> <span class="nav-text">配置是否允许 Bean 覆盖、是否允许循环依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#profile"><span class="nav-number">4.3.</span> <span class="nav-text">profile</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#工厂模式生成-Bean"><span class="nav-number">4.4.</span> <span class="nav-text">工厂模式生成 Bean</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FactoryBean"><span class="nav-number">4.5.</span> <span class="nav-text">FactoryBean</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#初始化-Bean-的回调"><span class="nav-number">4.6.</span> <span class="nav-text">初始化 Bean 的回调</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#销毁-Bean-的回调"><span class="nav-number">4.7.</span> <span class="nav-text">销毁 Bean 的回调</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ConversionService"><span class="nav-number">4.8.</span> <span class="nav-text">ConversionService</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Bean-继承"><span class="nav-number">4.9.</span> <span class="nav-text">Bean 继承</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法注入"><span class="nav-number">4.10.</span> <span class="nav-text">方法注入</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#lookup-method"><span class="nav-number">4.10.1.</span> <span class="nav-text">lookup-method</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#replaced-method"><span class="nav-number">4.10.2.</span> <span class="nav-text">replaced-method</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BeanPostProcessor"><span class="nav-number">4.11.</span> <span class="nav-text">BeanPostProcessor</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
       
 
       
@@ -3281,6 +1500,10 @@
 
 
   
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
 
   <script src="/js/next-boot.js?v=7.2.0"></script>
 
@@ -3306,9 +1529,66 @@
 </script>
 
 
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://sccarterrans.github.io/Spring-IOC-容器源码分析/";
+    this.page.identifier = "Spring-IOC-容器源码分析/";
+    this.page.title = 'Spring IOC 容器源码分析';
+    };
+  function loadComments() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://sccarterrans.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', '' + +new Date());
+    (d.head || d.body).appendChild(s);
+  }
+  
+    window.addEventListener('load', loadComments, false);
+  
+</script>
 
 
 
+
+
+  
+    
+
+
+<!-- 
+<script>
+  window.livereOptions = {
+    refer: 'Spring-IOC-容器源码分析/'
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+</script>
+-->
+
+<!-- 来必力City版安装代码 -->
+<div id="lv-container" data-id="city" data-uid="MTAyMC80NTQ1MS8yMTk2Mw==">
+	<script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+	</script>
+<noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+<!-- City版安装代码已完成 -->
+  
 
 
   
