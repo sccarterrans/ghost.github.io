@@ -128,7 +128,7 @@
 <meta property="og:image" content="https://sccarterrans.github.io/深入理解Java内存模型(JMM)及Volatile关键字/9.jpg">
 <meta property="og:image" content="https://sccarterrans.github.io/深入理解Java内存模型(JMM)及Volatile关键字/10.jpg">
 <meta property="og:image" content="https://sccarterrans.github.io/深入理解Java内存模型(JMM)及Volatile关键字/11.jpg">
-<meta property="og:updated_time" content="2019-10-24T10:45:34.151Z">
+<meta property="og:updated_time" content="2019-10-24T10:51:19.881Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入理解Java内存模型(JMM)及Volatile关键字">
 <meta name="twitter:description" content="分享目标本文通过Java volatile探讨以下问题  Volatile多线程引发的缓存一致性问题 Volatile多线程引发的不可见问题 Volatile引发的原子性问题 指令重排序含义及相关语义和规则 内存屏障的分类和使用">
@@ -458,7 +458,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-10-24 18:45:34" itemprop="dateModified" datetime="2019-10-24T18:45:34+08:00">2019-10-24</time>
+                <time title="修改时间：2019-10-24 18:51:19" itemprop="dateModified" datetime="2019-10-24T18:51:19+08:00">2019-10-24</time>
               </span>
             
           
@@ -550,7 +550,7 @@
 <h3 id="1、知识储备"><a href="#1、知识储备" class="headerlink" title="1、知识储备"></a>1、知识储备</h3><h4 id="1-1-原子性操作"><a href="#1-1-原子性操作" class="headerlink" title="1.1 原子性操作"></a>1.1 原子性操作</h4><p>在探讨问题之前需要先了解一下JMM的内存模型提供的八大原子性操作：</p>
 <figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">read(读取): 从主内存读取数据</span><br><span class="line">load(载入): 将主内存读取到的数据写入工作内存中</span><br><span class="line">use(使用): 从工作内存读取数据来计算</span><br><span class="line">assign(赋值): 将计算好的值重新赋值到工作内存中</span><br><span class="line">store(存储): 将工作内存数据写入主内存</span><br><span class="line">write(写入): 将store过来的变量赋值给主内存中的变量</span><br><span class="line">lock(锁定): 将主内存变量加锁,标识为线程独占状态</span><br><span class="line">unlock(解锁): 将主内存变量解锁,解锁后其他线程可以锁定该变量</span><br></pre></td></tr></table></figure>
 
-<h4 id="1-2-MESI缓存行"><a href="#1-2-MESI缓存行" class="headerlink" title="1.2 MESI缓存行"></a>1.2 MESI缓存行</h4><figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">MESI协议是以缓存行(缓存的基本数据单位，在Intel的CPU上一般是64字节)的几个状态来命名的(全名是Modified、Exclusive、 Share or Invalid)。该协议要求在每个缓存行上维护两个状态位，使得每个数据单位可能处于M、E、S和I这四种状态之一，各种状态含义如下：</span><br><span class="line">M：所有CPU把缓存状态改为I之后，会向主内存同步数据</span><br><span class="line">E：独占的。处于这一状态的数据，只有在本CPU中有缓存，且其数据没有修改，即与内存中一致</span><br><span class="line">S：共享的。处于这一状态的数据在多个CPU中都有缓存，且与内存一致</span><br><span class="line">I：无效的。本CPU中的这份缓存已经无效</span><br></pre></td></tr></table></figure>
+<h4 id="1-2-MESI缓存行"><a href="#1-2-MESI缓存行" class="headerlink" title="1.2 MESI缓存行"></a>1.2 MESI缓存行</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">MESI协议是以缓存行(缓存的基本数据单位，在Intel的CPU上一般是<span class="number">64</span>字节)的几个状态来命名的(全名是Modified、Exclusive、 Share or Invalid)。该协议要求在每个缓存行上维护两个状态位，使得每个数据单位可能处于M、E、S和I这四种状态之一，各种状态含义如下：</span><br><span class="line">M：所有CPU把缓存状态改为I之后，会向主内存同步数据</span><br><span class="line">E：独占的。处于这一状态的数据，只有在本CPU中有缓存，且其数据没有修改，即与内存中一致</span><br><span class="line">S：共享的。处于这一状态的数据在多个CPU中都有缓存，且与内存一致</span><br><span class="line">I：无效的。本CPU中的这份缓存已经无效</span><br></pre></td></tr></table></figure>
 
 <h4 id="1-3-Javap命令详解"><a href="#1-3-Javap命令详解" class="headerlink" title="1.3 Javap命令详解"></a>1.3 Javap命令详解</h4><figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">用法: javap &lt;options&gt; &lt;classes&gt;</span><br><span class="line">其中, 可能的选项包括:</span><br><span class="line">  -help  --help  -?        输出此用法消息</span><br><span class="line">  -version                 版本信息</span><br><span class="line">  -v  -verbose             输出附加信息</span><br><span class="line">  -l                       输出行号和本地变量表</span><br><span class="line">  -public                  仅显示公共类和成员</span><br><span class="line">  -protected               显示受保护的/公共类和成员</span><br><span class="line">  -package                 显示程序包/受保护的/公共类</span><br><span class="line">                           和成员 (默认)</span><br><span class="line">  -p  -private             显示所有类和成员</span><br><span class="line">  -c                       对代码进行反汇编</span><br><span class="line">  -s                       输出内部类型签名</span><br><span class="line">  -sysinfo                 显示正在处理的类的</span><br><span class="line">                           系统信息 (路径, 大小, 日期, MD5 散列)</span><br><span class="line">  -constants               显示最终常量</span><br><span class="line">  -classpath &lt;path&gt;        指定查找用户类文件的位置</span><br><span class="line">  -cp &lt;path&gt;               指定查找用户类文件的位置</span><br><span class="line">  -bootclasspath &lt;path&gt;    覆盖引导类文件的位置</span><br></pre></td></tr></table></figure>
 
@@ -590,7 +590,7 @@
 <ul>
 <li>编译期重排序的典型就是通过调整指令顺序，在单线程下不改变程序语义的前提下，尽可能减少寄存器的读取、存储次数，充分复用寄存器的存储值。</li>
 </ul>
-<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">假设第一条指令计算一个值赋给变量A并存放在寄存器中，第二条指令与A无关但需要占用寄存器（假设它将占用A所在的那个寄存器），第三条指令使用A的值且与第二条指令无关。那么如果按照顺序一致性模型，A在第一条指令执行过后被放入寄存器，在第二条指令执行时A不再存在，第三条指令执行时A重新被读入寄存器，而这个过程中，A的值没有发生变化。通常编译器都会交换第二和第三条指令的位置，这样第一条指令结束时A存在于寄存器中，接下来可以直接从寄存器中读取A的值，降低了重复读取的开销。</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">假设第一条指令计算一个值赋给变量A并存放在寄存器中，第二条指令与A无关但需要占用寄存器（假设它将占用A所在的那个寄存器），第三条指令使用A的值且与第二条指令无关。那么如果按照顺序一致性模型，A在第一条指令执行过后被放入寄存器，在第二条指令执行时A不再存在，第三条指令执行时A重新被读入寄存器，而这个过程中，A的值没有发生变化。通常编译器都会交换第二和第三条指令的位置，这样第一条指令结束时A存在于寄存器中，接下来可以直接从寄存器中读取A的值，降低了重复读取的开销。</span><br></pre></td></tr></table></figure>
 
 <ul>
 <li>运行期重排序包含指令并行的重排和内存系统的重排<ul>
